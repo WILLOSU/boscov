@@ -1,0 +1,18 @@
+# Ignorar node_modules de ambos os projetos
+**/node_modules
+
+# Ignorar arquivos .env
+**/.env
+
+# Ignorar diretórios de build (caso compile)
+**/dist
+**/build
+
+# Outros padrões comuns
+.DS_Store
+.env.local
+.env.development
+.env.production
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
