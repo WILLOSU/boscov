@@ -1,0 +1,75 @@
+📽️ Projeto Boscov
+🎬 Gerenciamento de Filmes e Avaliações
+🚀 Stack: Node.js + Express + Prisma + MySQL | React + TypeScript
+
+📌 Visão Geral
+O projeto Boscov é uma plataforma para gestão de filmes e avaliações, onde os usuários podem cadastrar filmes, dar notas e comentar.
+
+🏛️ Arquitetura do Projeto
+Este projeto segue a arquitetura monolítica modular, utilizando Express.js e Prisma para o backend, e React com TypeScript no frontend.
+
+📌 Arquitetura RESTful → O backend fornece uma API REST consumida pelo frontend.
+📌 Banco de Dados MySQL → Gerenciado com Prisma ORM.
+📌 Organização em Camadas (MVC) → Separação entre modelos, controladores, serviços e rotas.
+
+
+📂 Estrutura do Backend
+
+boscov-backend/
+│── src/
+│   ├── controllers/   # Lógica das requisições
+│   ├── routes/        # Rotas da API
+│   ├── models/        # Modelos do Prisma
+│   ├── services/      # Regras de negócio
+│   ├── middleware/    # Autenticação, logs, etc.
+│   ├── index.ts       # Ponto de entrada da API
+│── prisma/
+│   ├── schema.prisma  # Estrutura do banco de dados
+│── .env               # Configurações sensíveis
+│── package.json
+│── tsconfig.json
+
+
+🛠️ Tecnologias Utilizadas
+🔹 Backend
+Node.js + Express
+
+Prisma ORM + MySQL
+
+Autenticação JWT
+
+Validação com Zod
+
+🔹 Frontend
+React.js + TypeScript
+
+React Router
+
+Axios
+
+
+🚀 Como Rodar o Projeto
+1️⃣ Clonar o Repositório
+sh
+Copiar
+Editar
+git clone git remote add origin https://github.com/WILLOSU/boscov.git
+cd boscov
+
+2️⃣ Configurar o Backend
+
+cd boscov-backend
+cp .env.example .env  # Criar arquivo de ambiente
+npm install
+npx prisma migrate dev  # Criar tabelas no MySQL
+npm run dev
+
+
+3️⃣ Configurar o Frontend
+
+cd boscov-frontend
+npm install
+npm start
+
+
+
