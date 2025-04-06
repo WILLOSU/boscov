@@ -4,10 +4,12 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class UserController {
+  // GET /usuarios
   async getAll(req: Request, res: Response): Promise<void> {
     try {
-      const users = await prisma.user.findMany({
-        where: { ativo: true }
+      const users = await prisma.usuario.findMany({
+        where: { status: true },
+        include: { tipoUsuario: true }
       });
       res.json(users);
     } catch (error) {
@@ -16,15 +18,23 @@ export class UserController {
     }
   }
 
+  // GET /usuarios/:id
   async getById(req: Request, res: Response): Promise<void> {
     try {
       const id = Number(req.params.id);
-      const user = await prisma.user.findFirst({
-        where: { id, ativo: true }
+
+      if (isNaN(id)) {
+        res.status(400).json({ error: 'ID inválido' });
+        return;
+      }
+
+      const user = await prisma.usuario.findUnique({
+        where: { id },
+        include: { tipoUsuario: true }
       });
 
-      if (!user) {
-        res.status(404).json({ error: 'Usuário não encontrado' });
+      if (!user || !user.status) {
+        res.status(404).json({ error: 'Usuário não encontrado ou inativo' });
         return;
       }
 
@@ -35,17 +45,36 @@ export class UserController {
     }
   }
 
+  // POST /usuarios
   async create(req: Request, res: Response): Promise<void> {
     try {
-      const { name, email, password } = req.body;
+      const {
+        nome,
+        senha,
+        email,
+        apelido,
+        dataNascimento,
+        tipoUsuarioId
+      } = req.body;
 
-      if (!name || !email || !password) {
-        res.status(400).json({ error: 'Nome, email e senha são obrigatórios' });
+      if (!nome || !senha || !email || !tipoUsuarioId || !dataNascimento) {
+        res.status(400).json({ error: 'Nome, email, senha, tipo de usuário e data de nascimento são obrigatórios' });
         return;
       }
+      
 
-      const user = await prisma.user.create({
-        data: { name, email, password },
+      const user = await prisma.usuario.create({
+        data: {
+          nome,
+          senha,
+          email,
+          status: true,
+          apelido,
+          ...(dataNascimento && { dataNascimento: new Date(dataNascimento) }),
+          dataCriacao: new Date(),
+          dataAtualizacao: new Date(),
+          tipoUsuarioId: Number(tipoUsuarioId)
+        }
       });
 
       res.status(201).json(user);
@@ -55,14 +84,36 @@ export class UserController {
     }
   }
 
+  // PUT /usuarios/:id
   async update(req: Request, res: Response): Promise<void> {
     try {
       const id = Number(req.params.id);
-      const { name, email } = req.body;
 
-      const user = await prisma.user.update({
+      if (isNaN(id)) {
+        res.status(400).json({ error: 'ID inválido' });
+        return;
+      }
+
+      const {
+        nome,
+        senha,
+        email,
+        apelido,
+        dataNascimento,
+        tipoUsuarioId
+      } = req.body;
+
+      const user = await prisma.usuario.update({
         where: { id },
-        data: { name, email },
+        data: {
+          nome,
+          senha,
+          email,
+          apelido,
+          ...(dataNascimento && { dataNascimento: new Date(dataNascimento) }),
+          dataAtualizacao: new Date(),
+          ...(tipoUsuarioId && { tipoUsuarioId: Number(tipoUsuarioId) })
+        }
       });
 
       res.json(user);
@@ -72,13 +123,22 @@ export class UserController {
     }
   }
 
+  // DELETE /usuarios/:id
   async delete(req: Request, res: Response): Promise<void> {
     try {
       const id = Number(req.params.id);
 
-      const user = await prisma.user.update({
+      if (isNaN(id)) {
+        res.status(400).json({ error: 'ID inválido' });
+        return;
+      }
+
+      const user = await prisma.usuario.update({
         where: { id },
-        data: { ativo: false },
+        data: {
+          status: false,
+          dataAtualizacao: new Date()
+        }
       });
 
       res.status(200).json({ message: 'Usuário desativado com sucesso', user });
@@ -88,13 +148,22 @@ export class UserController {
     }
   }
 
+  // PATCH /usuarios/:id/restaurar
   async restore(req: Request, res: Response): Promise<void> {
     try {
       const id = Number(req.params.id);
 
-      const user = await prisma.user.update({
+      if (isNaN(id)) {
+        res.status(400).json({ error: 'ID inválido' });
+        return;
+      }
+
+      const user = await prisma.usuario.update({
         where: { id },
-        data: { ativo: true },
+        data: {
+          status: true,
+          dataAtualizacao: new Date()
+        }
       });
 
       res.status(200).json({ message: 'Usuário reativado com sucesso', user });

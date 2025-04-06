@@ -13,19 +13,30 @@ datasource db {
 //
 
 model Usuario {
-  id                Int          @id @default(autoincrement()) // Id autoincremental
-  nome              String                                         // Nome do usuário
-  senha             String                                         // Senha do usuário
-  email             String       @unique                          // E-mail (único no sistema)
-  status            Boolean      @default(true)                   // Status de ativo/inativo
-  apelido           String?                                       // Apelido (opcional)
-  dataNascimento    DateTime                                      // Data de nascimento
-  dataCriacao       DateTime     @default(now())                  // Data de criação do cadastro
-  dataAtualizacao   DateTime     @updatedAt                       // Atualiza automaticamente
-  tipoUsuario       String                                         // Tipo (admin, comum, etc.)
+  id                Int           @id @default(autoincrement())
+  nome              String
+  senha             String
+  email             String        @unique
+  status            Boolean       @default(true)
+  apelido           String?
+  dataNascimento    DateTime
+  dataCriacao       DateTime      @default(now())
+  dataAtualizacao   DateTime      @updatedAt
+
+  tipoUsuarioId     Int           // 🔗 Chave estrangeira para TipoUsuario
+  tipoUsuario       TipoUsuario   @relation(fields: [tipoUsuarioId], references: [id])
 
   // 🔗 Relacionamento com as Avaliações feitas pelo usuário (1:N)
   avaliacoes        Avaliacao[]
+}
+
+//
+// ✅ Modelo para representar os tipos de usuários (ex: Admin, Comum, etc.)
+//
+model TipoUsuario {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  usuarios  Usuario[] // 🔗 Um tipo pode estar associado a vários usuários
 }
 
 //
