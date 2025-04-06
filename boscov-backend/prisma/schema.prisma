@@ -7,12 +7,84 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id       Int     @id @default(autoincrement())
-  name     String
-  email    String  @unique
-  password String
-  ativo    Boolean @default(true)
+//
+// 🔄 Substituímos o antigo model 'User' por 'Usuario'
+//    e adicionamos novos campos conforme o modelo lógico atualizado.
+//
+
+model Usuario {
+  id                Int          @id @default(autoincrement()) // Id autoincremental
+  nome              String                                         // Nome do usuário
+  senha             String                                         // Senha do usuário
+  email             String       @unique                          // E-mail (único no sistema)
+  status            Boolean      @default(true)                   // Status de ativo/inativo
+  apelido           String?                                       // Apelido (opcional)
+  dataNascimento    DateTime                                      // Data de nascimento
+  dataCriacao       DateTime     @default(now())                  // Data de criação do cadastro
+  dataAtualizacao   DateTime     @updatedAt                       // Atualiza automaticamente
+  tipoUsuario       String                                         // Tipo (admin, comum, etc.)
+
+  // 🔗 Relacionamento com as Avaliações feitas pelo usuário (1:N)
+  avaliacoes        Avaliacao[]
 }
 
+//
+// ✅ Modelo Filme conforme especificado no diagrama
+//
+model Filme {
+  id               Int            @id @default(autoincrement())
+  nome             String
+  diretor          String
+  anoLancamento    Int
+  duracao          Int
+  produtora        String
+  classificacao    String
+  poster           String?
 
+  // 🔗 Um filme pode ter várias avaliações
+  avaliacoes       Avaliacao[]
+
+  // 🔗 Relacionamento N:N com Genero (via Genero_Filme)
+  generos          Genero_Filme[]
+}
+
+//
+// ✅ Modelo Genero conforme especificado
+//
+model Genero {
+  id         Int             @id @default(autoincrement())
+  descricao  String
+
+  // 🔗 Relacionamento com Genero_Filme (N:N)
+  generosFilmes Genero_Filme[]
+}
+
+//
+// ✅ Modelo intermediário para representar o N:N entre Filme e Genero
+//
+model Genero_Filme {
+  idGenero   Int
+  idFilme    Int
+
+  // 🔗 Relacionamentos com as tabelas pai
+  genero     Genero @relation(fields: [idGenero], references: [id])
+  filme      Filme  @relation(fields: [idFilme], references: [id])
+
+  // 🔐 Chave composta para evitar duplicidade
+  @@id([idGenero, idFilme])
+}
+
+//
+// ✅ Modelo Avaliacao, ligado a Usuario e Filme (N:1 dos dois lados)
+//
+model Avaliacao {
+  id         Int      @id @default(autoincrement())
+  idUsuario  Int
+  idFilme    Int
+  nota       Int
+  comentario String?
+
+  // 🔗 Relações com Usuario e Filme
+  usuario    Usuario @relation(fields: [idUsuario], references: [id])
+  filme      Filme   @relation(fields: [idFilme], references: [id])
+}
