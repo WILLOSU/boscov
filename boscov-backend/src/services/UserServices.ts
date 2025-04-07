@@ -1,24 +1,25 @@
-import prisma from '../prisma/Client';
+import { prisma } from './PrismaService';
+
 
 export const createUser = async (data: any) => {
-  return await prisma.user.create({ data });
+  return await prisma.usuario.create({ data });
 };
 
 export const getAllUsers = async () => {
-  return await prisma.user.findMany();
+  return await prisma.usuario.findMany();
 };
 
 export const getUserById = async (id: number) => {
-  return await prisma.user.findUnique({ where: { id } });
+  return await prisma.usuario.findUnique({ where: { id } });
 };
 
 export const updateUser = async (id: number, data: any) => {
-  return await prisma.user.update({
+  return await prisma.usuario.update({
     where: { id },
     data,
   });
 };
 
 export const deleteUser = async (id: number) => {
-  return await prisma.user.delete({ where: { id } });
+  return await prisma.usuario.delete({ where: { id } });
 };

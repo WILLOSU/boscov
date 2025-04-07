@@ -1,12 +1,17 @@
-
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import { FilmeController } from '../controllers/FilmeController';
 
 const router = Router();
 const filmeController = new FilmeController();
 
-router.get('/filmes', async (req: Request, res: Response) => {
-  await filmeController.getAll(req, res);
-});
+// Mesma estrutura das rotas de usuário
+router.get('/', filmeController.getAll);
+router.get('/:id', filmeController.getById);
+router.post('/', filmeController.create);
+router.put('/:id', filmeController.update);
+router.delete('/:id', filmeController.delete);
+router.patch('/:id/desativar', filmeController.delete);
+router.patch('/:id/restaurar', filmeController.restore);
+
 
 export default router;
