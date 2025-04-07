@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -45,44 +46,55 @@ export class UserController {
     }
   }
 
+ 
   // POST /usuarios
-  async create(req: Request, res: Response): Promise<void> {
-    try {
-      const {
-        nome,
-        senha,
-        email,
-        apelido,
-        dataNascimento,
-        tipoUsuarioId
-      } = req.body;
+async create(req: Request, res: Response): Promise<void> {
+  try {
+    const {
+      nome,
+      senha,
+      email,
+      apelido,
+      dataNascimento,
+      tipoUsuarioId
+    } = req.body;
 
-      if (!nome || !senha || !email || !tipoUsuarioId || !dataNascimento) {
-        res.status(400).json({ error: 'Nome, email, senha, tipo de usuário e data de nascimento são obrigatórios' });
-        return;
-      }
-      
-
-      const user = await prisma.usuario.create({
-        data: {
-          nome,
-          senha,
-          email,
-          status: true,
-          apelido,
-          ...(dataNascimento && { dataNascimento: new Date(dataNascimento) }),
-          dataCriacao: new Date(),
-          dataAtualizacao: new Date(),
-          tipoUsuarioId: Number(tipoUsuarioId)
-        }
-      });
-
-      res.status(201).json(user);
-    } catch (error) {
-      console.error('Erro ao criar usuário:', error);
-      res.status(500).json({ error: 'Erro interno do servidor' });
+    if (!nome || !senha || !email || !tipoUsuarioId || !dataNascimento) {
+      res.status(400).json({ error: 'Nome, email, senha, tipo de usuário e data de nascimento são obrigatórios' });
+      return;
     }
+
+    const tipoUsuarioExistente = await prisma.tipoUsuario.findUnique({
+      where: { id: Number(tipoUsuarioId) },
+    });
+
+    if (!tipoUsuarioExistente) {
+      res.status(400).json({ error: 'Tipo de usuário inválido ou inexistente' });
+      return;
+    }
+    
+    const senhaCriptografada = await bcrypt.hash(senha, 10);
+    const user = await prisma.usuario.create({
+      data: {
+        nome,
+        senha: senhaCriptografada,
+        email,
+        status: true,
+        apelido,
+        dataNascimento: new Date(dataNascimento),
+        dataCriacao: new Date(),
+        dataAtualizacao: new Date(),
+        tipoUsuarioId: Number(tipoUsuarioId)
+      }
+    });
+
+    res.status(201).json(user);
+  } catch (error) {
+    console.error('Erro ao criar usuário:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
+}
+
 
   // PUT /usuarios/:id
   async update(req: Request, res: Response): Promise<void> {
