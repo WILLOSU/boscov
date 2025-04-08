@@ -30,31 +30,31 @@ boscov-backend/
 │── tsconfig.json
 
 
-🛠️ Tecnologias Utilizadas
-🔹 Backend
-Node.js + Express
 
-Prisma ORM + MySQL
+---
 
-Autenticação JWT
+🛠️ Tecnologias Utilizadas  
 
-Validação com Zod
+🔹 **Backend**  
+- Node.js + Express  
+- Prisma ORM + MySQL  
+- Autenticação JWT  
+- Validação com Zod  
 
-🔹 Frontend
-React.js + TypeScript
+🔹 **Frontend**  
+- React.js + TypeScript  
+- React Router  
+- Axios  
 
-React Router
+---
 
-Axios
+🚀 Como Rodar o Projeto  
 
-
-🚀 Como Rodar o Projeto
 1️⃣ Clonar o Repositório
-sh
-Copiar
-Editar
-git clone git remote add origin https://github.com/WILLOSU/boscov.git
+```bash
+git clone https://github.com/WILLOSU/boscov.git
 cd boscov
+
 
 2️⃣ Configurar o Backend
 
@@ -71,5 +71,35 @@ cd boscov-frontend
 npm install
 npm start
 
+🔐 Autenticação (JWT)
+
+O sistema de login utiliza autenticação com JSON Web Token (JWT). Após o login, um token é gerado e deve ser enviado no cabeçalho das requisições protegidas.
+
+🔸 Endpoint de Login
+
+POST /auth/login
+
+📥 Corpo da Requisição (JSON):
+
+{
+  "username": "admin",
+  "password": "123456"
+}
 
 
+📤 Resposta:
+
+{
+  "message": "Autenticado com sucesso",
+  "token": "SEU_TOKEN_JWT"
+}
+
+📬 Rotas da API
+
+Método	Rota	      Descrição
+POST	/auth/login	  Realiza login e gera token JWT
+GET	  /users	      Lista todos os usuários
+GET	  /api	        Lista todos os filmes
+POST	/api	        Cadastra um novo filme
+GET	  /generos	    Lista todos os gêneros
+POST	/avaliacao	  Cadastra uma avaliação de filme
