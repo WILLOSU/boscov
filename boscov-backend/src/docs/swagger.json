@@ -1,0 +1,447 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Boscov Project - Documentation",
+      "description": "In this documentation you will be able to consult the API end-points and also test all available routes. Do not forget to register and carry out the authorization.",
+      "contact": {
+        "email": "william.mota@estudante.iftm.edu.br"
+      },
+      "version": "1.0.0"
+    },
+    "servers": [
+  
+      
+      {
+        "url": "",
+        "description": "Render Server"
+      },
+      {
+        "url": "http://localhost:3000",
+        "description": "Local Server"
+      }
+    ],
+    "paths": {
+      "/user/": {
+        "post": {
+          "summary": "Create a new user",
+          "description": "Route responsible for creating a new user",
+          "tags": ["Users"],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "Users": {
+                    "value": {
+                      "nome": "Cacau Lima",
+                      "senha": "1234567",
+                      "email": "clima@gmail.com",
+                      "status": true,
+                      "apelido": "cacode",
+                      "dataNascimento": "1990-05-15T00:00:00.000Z",
+                      "tipoUsuarioId": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "400": {
+              "description": "Not Found"
+            },
+            "201": {
+              "description": "Created",
+              "content": {
+                "application/json": {
+                  "schemma": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/user": {
+        "get": {
+          "summary": "Search all users",
+          "description": "Route responsible for fetching all users",
+          "tags": ["Users"],
+          "security": [{ "bearerAuth": [] }],
+          "responses": {
+            "401": {
+              "description": "Unauthorized"
+            },
+            "400": {
+              "description": "Not Found"
+            },
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/user/{id}/": {
+        "get": {
+          "summary": "Search user by id",
+          "description": "Route responsible for searching for user by id",
+          "tags": ["Users"],
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "type": "string",
+              "description": "User ID",
+              "required": true
+            }
+          ],
+          "responses": {
+            "401": {
+              "description": "Unauthorized"
+            },
+            "400": {
+              "description": "Not Found"
+            },
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/user/{id}": {
+        "patch": {
+          "summary": "Update user by id",
+          "description": "Route responsible for editing the user by id",
+          "tags": ["Users"],
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "type": "string",
+              "description": "User ID",
+              "required": true
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "Users": {
+                    "value": {
+                      "name": "William Mota"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "401": {
+              "description": "Unauthorized"
+            },
+            "400": {
+              "description": "Not Found"
+            },
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth": {
+        "post": {
+          "summary": "Login ",
+          "description": "Route responsible for logging in a registered user",
+          "tags": ["Auth"],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "User": {
+                    "value": {
+                      "email": "clima@gmail.com",
+                      "password": "1234567"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "400": {
+              "description": "Not Found"
+            },
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      },
+      "/api/": {
+        "post": {
+          "summary": "Create a new Filme",
+          "description": "Route responsible for creating a new Filme",
+          "tags": ["filme"],
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/News"
+                },
+                "examples": {
+                  "api": {
+                    "value": {
+                      "nome": "Dungeons & Dragons",
+                      "diretor": "Courtney Solomon",
+                      "anoLancamento": "2012",
+                      "genero": "Aventura",
+                      "duracao": "2",
+                      "produtora": "Courtney Solomon",
+                      "classificacao": "livre",
+                      "poster": "https://upload.wikimedia.org/wikipedia/pt/thumb/2/27/Dungeons_%26_Dragons.jpg/250px-Dungeons_%26_Dragons.jpg",
+                      "sinopse": "No Reino de Izmer, mágicos usam seus poderes para dominar a Terra. Savina, uma imperatriz cheia de juventude, está determinada a usar seus poderes em prol da justiça e da prosperidade. Entretanto, ela é deposta por um diabólico mágico e precisa controlar os Dragões Vermelhos para reaver o trono.",
+                      "status": "ativo",
+                      "dataAtualizacao": "1990-05-15T00:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "401": {
+              "description": "Unauthorized"
+            },
+            "400": {
+              "description": "Not Found"
+            },
+            "201": {
+              "description": "Created",
+              "content": {
+                "application/json": {
+                  "schemma": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/News"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api": {
+        "get": {
+          "summary": "Search all filmes",
+          "description": "Route responsible for fetching all filmes",
+          "tags": ["api"],
+          "parameters": [
+            {
+              "in": "query",
+              "name": "limit",
+              "type": "string"
+            },
+            {
+              "in": "query",
+              "name": "offset",
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Not Found"
+            },
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/News"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/top": {
+        "get": {
+          "summary": "Search top filmes",
+          "description": "Route responsible for fetching top filmes",
+          "tags": ["api"],
+          "responses": {
+            "400": {
+              "description": "Not Found"
+            },
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schemma": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/News"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      
+ 
+      "/api/byUser": {
+        "get": {
+          "summary": "Search movie by use id",
+          "description": "Route responsible for fetching movie by use id",
+          "tags": ["api"],
+          "security": [{ "bearerAuth": [] }],
+          "responses": {
+            "400": {
+              "description": "Not Found"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/News"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/{id}": {
+        "patch": {
+          "summary": "Update a movie",
+          "description": "Route responsible for updating a movie",
+          "tags": ["api"],
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "type": "string",
+              "description": "Post ID",
+              "required": true
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/News"
+                },
+                "examples": {
+                  "Post": {
+                    "value": {
+                      "banner": "Edit",
+                      "title": "Edit",
+                      "text": "Edit"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "401": {
+              "description": "Unauthorized"
+            },
+            "400": {
+              "description": "Not Found"
+            },
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schemma": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/News"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/{id}/": {
+        "delete": {
+          "summary": "Delete a movie",
+          "description": "Route responsible for deleting a movie",
+          "tags": ["api"],
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "type": "string",
+              "description": "News ID",
+              "required": true
+            }
+          ],
+          "responses": {
+            "401": {
+              "description": "Unauthorized"
+            },
+            "400": {
+              "description": "Not Found"
+            },
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      }  
+    }  
+}    
+
+  
