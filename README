@@ -96,10 +96,36 @@ POST /auth/login
 
 📬 Rotas da API
 
-Método	Rota	      Descrição
-POST	/auth/login	  Realiza login e gera token JWT
-GET	  /users	      Lista todos os usuários
-GET	  /api	        Lista todos os filmes
-POST	/api	        Cadastra um novo filme
-GET	  /generos	    Lista todos os gêneros
-POST	/avaliacao	  Cadastra uma avaliação de filme
+Método	Rota	    Descrição
+POST	/auth/login	Realiza login e gera token JWT
+GET	    /users	    Lista todos os usuários
+GET	    /api	    Lista todos os filmes
+POST	/api	    Cadastra um novo filme
+GET	    /generos	Lista todos os gêneros
+POST	/avaliacao	Cadastra uma avaliação de filme
+
+
+
+boscov-frontend/
+├── src/
+│   ├── assets/           # Imagens, ícones, etc.
+│   ├── components/       # Componentes reutilizáveis
+│   │   ├── layout/       # Layout components (Header, Footer, etc.)
+│   │   ├── ui/           # UI components (Button, Input, etc.)
+│   │   └── films/        # Componentes específicos de filmes
+│   ├── hooks/            # Custom hooks
+│   ├── pages/            # Páginas da aplicação
+│   │   ├── auth/         # Páginas de autenticação
+│   │   ├── films/        # Páginas de filmes
+│   │   └── reviews/      # Páginas de avaliações
+│   ├── services/         # Serviços de API
+│   ├── types/            # Definições de tipos TypeScript
+│   ├── utils/            # Funções utilitárias
+│   ├── contexts/         # Context API (para auth, etc.)
+│   ├── App.tsx           # Componente principal
+│   ├── main.tsx          # Ponto de entrada
+│   └── routes.tsx        # Configuração de rotas
+├── .env                  # Variáveis de ambiente
+├── index.html
+├── package.json
+└── tsconfig.json
