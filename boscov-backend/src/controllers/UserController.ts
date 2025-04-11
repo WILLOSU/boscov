@@ -10,7 +10,7 @@ export class UserController {
     try {
       const users = await prisma.usuario.findMany({
         where: { status: true },
-        include: { tipoUsuario: true }
+        include: { tipousuario: true }
       });
       res.json(users);
     } catch (error) {
@@ -31,7 +31,7 @@ export class UserController {
 
       const user = await prisma.usuario.findUnique({
         where: { id },
-        include: { tipoUsuario: true }
+        include: { tipousuario: true }
       });
 
       if (!user || !user.status) {
@@ -64,7 +64,7 @@ async create(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const tipoUsuarioExistente = await prisma.tipoUsuario.findUnique({
+    const tipoUsuarioExistente = await prisma.tipousuario.findUnique({
       where: { id: Number(tipoUsuarioId) },
     });
 
@@ -97,43 +97,47 @@ async create(req: Request, res: Response): Promise<void> {
 
 
   // PUT /usuarios/:id
-  async update(req: Request, res: Response): Promise<void> {
-    try {
-      const id = Number(req.params.id);
+  // PUT /usuarios/:id
+async update(req: Request, res: Response): Promise<void> {
+  try {
+    const id = Number(req.params.id);
 
-      if (isNaN(id)) {
-        res.status(400).json({ error: 'ID inválido' });
-        return;
-      }
+    if (isNaN(id)) {
+      res.status(400).json({ error: 'ID inválido' });
+      return;
+    }
 
-      const {
+    const {
+      nome,
+      senha,
+      email,
+      apelido,
+      dataNascimento,
+      tipoUsuarioId,
+      status 
+    } = req.body;
+
+    const user = await prisma.usuario.update({
+      where: { id },
+      data: {
         nome,
         senha,
         email,
         apelido,
-        dataNascimento,
-        tipoUsuarioId
-      } = req.body;
+        ...(dataNascimento && { dataNascimento: new Date(dataNascimento) }),
+        dataAtualizacao: new Date(),
+        ...(tipoUsuarioId && { tipoUsuarioId: Number(tipoUsuarioId) }),
+        ...(status !== undefined && { status }) 
+      }
+    });
 
-      const user = await prisma.usuario.update({
-        where: { id },
-        data: {
-          nome,
-          senha,
-          email,
-          apelido,
-          ...(dataNascimento && { dataNascimento: new Date(dataNascimento) }),
-          dataAtualizacao: new Date(),
-          ...(tipoUsuarioId && { tipoUsuarioId: Number(tipoUsuarioId) })
-        }
-      });
-
-      res.json(user);
-    } catch (error) {
-      console.error('Erro ao atualizar usuário:', error);
-      res.status(500).json({ error: 'Erro ao atualizar usuário' });
-    }
+    res.status(200).json({ message: 'Usuário atualizado com sucesso', user });
+  } catch (error) {
+    console.error('Erro ao atualizar usuário:', error);
+    res.status(500).json({ error: 'Erro ao atualizar usuário' });
   }
+}
+
 
   // DELETE /usuarios/:id
   async delete(req: Request, res: Response): Promise<void> {
@@ -184,4 +188,29 @@ async create(req: Request, res: Response): Promise<void> {
       res.status(500).json({ error: 'Erro ao reativar usuário' });
     }
   }
+
+
+  // GET /test
+// controllers/UserController.ts
+// GET /users/test
+async test(req: Request, res: Response): Promise<void> {
+  try {
+    const users = await prisma.usuario.findMany({
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        status: true
+      }
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
+    res.status(500).json({ error: 'Erro ao buscar usuários' });
+  }
+}
+
+
+
 }

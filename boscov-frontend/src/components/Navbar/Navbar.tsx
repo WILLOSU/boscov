@@ -1,23 +1,25 @@
 import React from "react";
 import logo from '../Imagens/LogoBF.png'
-import "./Navbar.css"
+import { Button, Nav, ImageLogo, InputSpace } from "./NavbarStyled";
+
 
 export const Navbar: React.FC = () => {
   return (
     <>
       {" "}
       {/* Fragment */}
-      <nav>
-        <div className="input-search-space">
+      <Nav>
+        <InputSpace>
             <i className="bi bi-search"></i>
                 <input type="text" placeholder="Pesquise por um Filme" />
 
             
-        </div>
+        </InputSpace>
 
-        <img src={logo} alt="Logo do Boscov Filmes" />
-        <button>Entrar</button>
-      </nav>
+        <ImageLogo src={logo} alt="Logo do Boscov Filmes" />
+        <Button>Entrar</Button>
+      </Nav>
     </>
   );
 };
+

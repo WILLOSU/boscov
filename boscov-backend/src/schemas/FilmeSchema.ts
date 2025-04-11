@@ -2,8 +2,14 @@
 import { z } from 'zod';
 
 export const filmeSchema = z.object({
-  titulo: z.string().min(1, 'Título é obrigatório'),
-  diretor: z.string().min(1, 'Diretor é obrigatório'),
-  ano: z.number().int().gte(1900).lte(new Date().getFullYear()),
-  genero: z.string().min(1),
+  nome: z.string(),
+  diretor: z.string(),
+  anoLancamento: z.number().int(),
+  duracao: z.number().int(),
+  produtora: z.string(),
+  classificacao: z.string(),
+  poster: z.string().url().optional(),
+  generoId: z.number().int(),
+  sinopse: z.string().optional(),
+  status: z.boolean().optional()
 });

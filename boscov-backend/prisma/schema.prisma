@@ -7,95 +7,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//
-// ✅ Modelo Usuario
-//
-model Usuario {
-  id                Int           @id @default(autoincrement())
-  nome              String
-  senha             String
-  email             String        @unique
-  status            Boolean       @default(true)
-  apelido           String?
-  dataNascimento    DateTime
-  dataCriacao       DateTime      @default(now())
-  dataAtualizacao   DateTime      @updatedAt
-
-  tipoUsuarioId     Int
-  tipoUsuario       TipoUsuario   @relation(fields: [tipoUsuarioId], references: [id])
-
-  avaliacoes        Avaliacao[]
-}
-
-//
-// ✅ Modelo TipoUsuario
-//
-model TipoUsuario {
-  id        Int       @id @default(autoincrement())
-  nome      String
-
-  usuarios  Usuario[]
-}
-
-//
-// ✅ Modelo Filme
-//
-model Filme {
-  id               Int              @id @default(autoincrement())
-  nome             String
-  diretor          String
-  anoLancamento    Int
-  generoId         Int
-  duracao          Int
-  produtora        String
-  classificacao    String
-  poster           String?
-  sinopse          String?
-  status           Boolean          @default(true)
-  dataAtualizacao  DateTime?
-
-
-  genero   Genero @relation(fields: [generoId], references: [id])
-  generos          Genero_Filme[]   // Relação N:N com Genero (intermediário)
-  avaliacoes       Avaliacao[]      // Relação 1:N com Avaliação
-}
-
-//
-// ✅ Modelo Genero
-//
-model Genero {
-  id        Int             @id @default(autoincrement())
-  descricao String
-  status Boolean @default(true)
-
-
-  filmes    Filme[]         // Relação 1:N com Filme (usada por generoId)
-  generos   Genero_Filme[]  // Relação N:N com Filme
-}
-
-//
-// ✅ Tabela intermediária para Filme e Genero (N:N)
-//
-model Genero_Filme {
-  idGenero   Int
-  idFilme    Int
-
-  genero     Genero @relation(fields: [idGenero], references: [id])
-  filme      Filme  @relation(fields: [idFilme], references: [id])
-
-  @@id([idGenero, idFilme])
-}
-
-//
-// ✅ Avaliação (N:1 com Usuario e Filme)
-//
-model Avaliacao {
-  id         Int      @id @default(autoincrement())
+model avaliacao {
+  id         Int     @id @default(autoincrement())
   idUsuario  Int
   idFilme    Int
   nota       Int
   comentario String?
+  filme      filme   @relation(fields: [idFilme], references: [id], map: "Avaliacao_idFilme_fkey")
+  usuario    usuario @relation(fields: [idUsuario], references: [id], map: "Avaliacao_idUsuario_fkey")
 
-  usuario    Usuario  @relation(fields: [idUsuario], references: [id])
-  filme      Filme    @relation(fields: [idFilme], references: [id])
+  @@index([idFilme], map: "Avaliacao_idFilme_fkey")
+  @@index([idUsuario], map: "Avaliacao_idUsuario_fkey")
+}
+
+model filme {
+  id              Int            @id @default(autoincrement())
+  nome            String
+  diretor         String
+  anoLancamento   Int
+  duracao         Int
+  produtora       String
+  classificacao   String
+  poster          String?
+  generoId        Int
+  sinopse         String?
+  dataAtualizacao DateTime?
+  status          Boolean        @default(true)
+  avaliacao       avaliacao[]
+  genero          genero         @relation(fields: [generoId], references: [id], map: "Filme_generoId_fkey")
+  genero_filme    genero_filme[]
+
+  @@index([generoId], map: "Filme_generoId_fkey")
+}
+
+model genero {
+  id           Int            @id @default(autoincrement())
+  descricao    String
+  status       Boolean        @default(true)
+  filme        filme[]
+  genero_filme genero_filme[]
+}
+
+model genero_filme {
+  idGenero Int
+  idFilme  Int
+  filme    filme  @relation(fields: [idFilme], references: [id], map: "Genero_Filme_idFilme_fkey")
+  genero   genero @relation(fields: [idGenero], references: [id], map: "Genero_Filme_idGenero_fkey")
+
+  @@id([idGenero, idFilme])
+  @@index([idFilme], map: "Genero_Filme_idFilme_fkey")
+}
+
+model tipousuario {
+  id      Int       @id @default(autoincrement())
+  nome    String
+  usuario usuario[]
+}
+
+model usuario {
+  id              Int         @id @default(autoincrement())
+  nome            String
+  senha           String
+  email           String      @unique(map: "Usuario_email_key")
+  status          Boolean     @default(true)
+  apelido         String?
+  dataNascimento  DateTime
+  dataCriacao     DateTime    @default(now())
+  dataAtualizacao DateTime
+  tipoUsuarioId   Int
+  avaliacao       avaliacao[]
+  tipousuario     tipousuario @relation(fields: [tipoUsuarioId], references: [id], map: "Usuario_tipoUsuarioId_fkey")
+
+  @@index([tipoUsuarioId], map: "Usuario_tipoUsuarioId_fkey")
+
+  
+  @@map("usuario")
 }

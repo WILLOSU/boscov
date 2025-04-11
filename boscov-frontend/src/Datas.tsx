@@ -1,5 +1,5 @@
 // Interface para definir o tipo de um filme
-interface Filme {
+export interface Filme {
   nome: string;
   sinopse: string;
   poster: string;
