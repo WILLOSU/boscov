@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { FilmeController } from '../controllers/FilmeController';
-import { validate } from '../middlewares/validate';
+import { validate } from '../middlewares/Validate';
 import { filmeSchema } from '../schemas/FilmeSchema';
 
 const router = Router();

@@ -1,6 +1,6 @@
 import express from 'express';
 import * as avaliacaoController from '../controllers/AvaliacaoController';
-import { validate } from '../middlewares/validate';
+import { validate } from '../middlewares/Validate';
 import { avaliacaoSchema } from '../schemas/AvaliacaoSchema';
 
 const router = express.Router();

@@ -7,7 +7,7 @@ export const validate = (schema: AnyZodObject) =>
   (req: Request, res: Response, next: NextFunction): void => {
     try {
       schema.parse(req.body);
-      next();
+      next();// vai para o método
     } catch (err: any) {
       res.status(400).json({
         error: 'Erro de validação',

@@ -10,8 +10,19 @@ export class UserController {
     try {
       const users = await prisma.usuario.findMany({
         where: { status: true },
-        include: { tipousuario: true }
+        select: {
+          id: true,
+          nome: true,
+          email: true,
+          apelido: true,
+          dataNascimento: true,
+          dataCriacao: true,
+          dataAtualizacao: true,
+          status: true,
+          tipousuario: true, // inclua apenas se necessário
+        }
       });
+        
       res.json(users);
     } catch (error) {
       console.error('Erro ao buscar usuários:', error);
@@ -31,10 +42,20 @@ export class UserController {
 
       const user = await prisma.usuario.findUnique({
         where: { id },
-        include: { tipousuario: true }
+        select: {
+          id: true,
+          nome: true,
+          email: true,
+          apelido: true,
+          dataNascimento: true,
+          dataCriacao: true,
+          dataAtualizacao: true,
+          status: true,
+          tipousuario: true,
+        }
       });
-
-      if (!user || !user.status) {
+        
+        if (!user || !user.status) {
         res.status(404).json({ error: 'Usuário não encontrado ou inativo' });
         return;
       }
@@ -97,47 +118,43 @@ async create(req: Request, res: Response): Promise<void> {
 
 
   // PUT /usuarios/:id
-  // PUT /usuarios/:id
-async update(req: Request, res: Response): Promise<void> {
-  try {
-    const id = Number(req.params.id);
+  async update(req: Request, res: Response): Promise<void> {
+    try {
+      const id = Number(req.params.id);
 
-    if (isNaN(id)) {
-      res.status(400).json({ error: 'ID inválido' });
-      return;
-    }
+      if (isNaN(id)) {
+        res.status(400).json({ error: 'ID inválido' });
+        return;
+      }
 
-    const {
-      nome,
-      senha,
-      email,
-      apelido,
-      dataNascimento,
-      tipoUsuarioId,
-      status 
-    } = req.body;
-
-    const user = await prisma.usuario.update({
-      where: { id },
-      data: {
+      const {
         nome,
         senha,
         email,
         apelido,
-        ...(dataNascimento && { dataNascimento: new Date(dataNascimento) }),
-        dataAtualizacao: new Date(),
-        ...(tipoUsuarioId && { tipoUsuarioId: Number(tipoUsuarioId) }),
-        ...(status !== undefined && { status }) 
-      }
-    });
+        dataNascimento,
+        tipoUsuarioId
+      } = req.body;
 
-    res.status(200).json({ message: 'Usuário atualizado com sucesso', user });
-  } catch (error) {
-    console.error('Erro ao atualizar usuário:', error);
-    res.status(500).json({ error: 'Erro ao atualizar usuário' });
+      const user = await prisma.usuario.update({
+        where: { id },
+        data: {
+          nome,
+          senha,
+          email,
+          apelido,
+          ...(dataNascimento && { dataNascimento: new Date(dataNascimento) }),
+          dataAtualizacao: new Date(),
+          ...(tipoUsuarioId && { tipoUsuarioId: Number(tipoUsuarioId) })
+        }
+      });
+
+      res.json(user);
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+      res.status(500).json({ error: 'Erro ao atualizar usuário' });
+    }
   }
-}
-
 
   // DELETE /usuarios/:id
   async delete(req: Request, res: Response): Promise<void> {
@@ -166,7 +183,7 @@ async update(req: Request, res: Response): Promise<void> {
 
   // PATCH /usuarios/:id/restaurar
   async restore(req: Request, res: Response): Promise<void> {
-    try {
+    try { // tente fazer alguma coisa
       const id = Number(req.params.id);
 
       if (isNaN(id)) {
@@ -183,34 +200,9 @@ async update(req: Request, res: Response): Promise<void> {
       });
 
       res.status(200).json({ message: 'Usuário reativado com sucesso', user });
-    } catch (error) {
+    } catch (error) { // se não der mostra o erro !!
       console.error('Erro ao reativar usuário:', error);
       res.status(500).json({ error: 'Erro ao reativar usuário' });
     }
   }
-
-
-  // GET /test
-// controllers/UserController.ts
-// GET /users/test
-async test(req: Request, res: Response): Promise<void> {
-  try {
-    const users = await prisma.usuario.findMany({
-      select: {
-        id: true,
-        nome: true,
-        email: true,
-        status: true
-      }
-    });
-
-    res.json(users);
-  } catch (error) {
-    console.error('Erro ao buscar usuários:', error);
-    res.status(500).json({ error: 'Erro ao buscar usuários' });
-  }
-}
-
-
-
 }

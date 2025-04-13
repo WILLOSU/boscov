@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'; // ecma script modo
 import cors from 'cors';
 import dotenv from 'dotenv';
 
@@ -35,6 +35,6 @@ app.use('/doc', swaggerRoute);
 // Define porta de forma segura para dev e produção
 const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, () => { // in line não precisa da chave
   console.log(`Servidor rodando na porta ${PORT}`);
 });

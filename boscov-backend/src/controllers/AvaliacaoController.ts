@@ -5,12 +5,26 @@ const service = new AvaliacaoService();
 
 export const criar = async (req: Request, res: Response) => {
   try {
-    const nova = await service.criar(req.body);
-    res.status(201).json(nova);
+    const usuarioId = (req as any).userId;
+
+    if (!usuarioId) {
+      res.status(401).json({ error: 'Usuário não autenticado' });
+      return;
+    }
+
+    const novaAvaliacao = await service.criar({
+      ...req.body,
+      usuarioId,
+    });
+
+    res.status(201).json(novaAvaliacao);
   } catch (error) {
+    console.error('Erro ao criar avaliação:', error);
     res.status(500).json({ error: 'Erro ao criar avaliação' });
   }
 };
+
+
 
 export const listar = async (_req: Request, res: Response) => {
   try {
