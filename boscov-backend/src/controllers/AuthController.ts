@@ -1,36 +1,44 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { jwtSecret, jwtExpiresIn } from '../config/JwtConfig';
-
-const userMock = {
-  id: 1,
-  username: 'admin',
-  password: bcrypt.hashSync('123456', 8),
-};
+import { loginService, generateToken } from '../services/AuthService';
 
 export class AuthController {
-  static login(req: Request, res: Response): void {
-    const { username, password } = req.body;
+  static async login(req: Request, res: Response): Promise<void> {
+    const { email, password } = req.body;
 
-    if (username !== userMock.username) {
-      res.status(401).json({ message: 'Usuário não encontrado' });
-      return;
+    try {
+      // Busca o usuário no banco de dados
+      const user = await loginService(email);
+
+      if (!user) {
+        console.log("Usuário não encontrado");
+        res.status(404).json({ message: 'Usuário ou senha inválidos' });
+        return;
+      }
+
+      // Verifica a senha comparando o hash armazenado com a senha fornecida
+      const passwordIsValid = await bcrypt.compare(password, user.senha);
+
+      if (!passwordIsValid) {
+        console.log("Senha inválida");
+        res.status(404).json({ message: 'Usuário ou senha inválidos' });
+        return;
+      }
+
+      // Se a senha for válida, gera o token
+      const token = generateToken(user.id);
+
+      // Remover a senha do objeto de resposta
+      const { senha, ...userWithoutPassword } = user;
+
+      // Retorna o token e os dados do usuário sem a senha
+      res.status(200).json({
+        token,
+        user: userWithoutPassword,
+      });
+    } catch (error) {
+      console.error('Erro no login:', error);
+      res.status(500).json({ message: 'Erro ao autenticar usuário' });
     }
-
-    const passwordIsValid = bcrypt.compareSync(password, userMock.password);
-    if (!passwordIsValid) {
-      res.status(401).json({ message: 'Senha inválida' });
-      return;
-    }
-
-    const token = jwt.sign({ id: userMock.id }, jwtSecret, {
-      expiresIn: jwtExpiresIn,
-    });
-
-    res.status(200).json({
-      message: 'Autenticado com sucesso',
-      token,
-    });
   }
 }
