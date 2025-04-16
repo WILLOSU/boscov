@@ -79,7 +79,5 @@ model usuario {
   tipousuario     tipousuario @relation(fields: [tipoUsuarioId], references: [id], map: "Usuario_tipoUsuarioId_fkey")
 
   @@index([tipoUsuarioId], map: "Usuario_tipoUsuarioId_fkey")
-
-  
   @@map("usuario")
 }

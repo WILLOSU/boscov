@@ -1,9 +1,18 @@
-import express from 'express'; // ecma script modo
 import cors from 'cors';
 import dotenv from 'dotenv';
+import express from 'express';
 
+// Configuração do ambiente
 dotenv.config(); // sempre no topo
 
+// Inicialização da aplicação
+const app = express();
+
+// Configuração de middlewares
+app.use(cors());
+app.use(express.json());
+
+// Importação das rotas
 import authRoutes from './routes/AuthRoutes'; 
 import userRoutes from './routes/UserRoutes';
 import filmeRoutes from './routes/FilmeRoutes';
@@ -11,23 +20,10 @@ import generoRoutes from './routes/GeneroRoutes';
 import avaliacaoRoutes from './routes/AvaliacaoRoutes';
 import swaggerRoute from "./routes/SwaggerRoutes";
 
-const app = express();
-const swaggerUi = require('swagger-ui-express');
-const swaggerFile = require('./docs/swagger.json');
-
-// Documentação Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
-// Middlewares
-app.use(cors());
-app.use(express.json());
-
-// Rotas da aplicação
-
-app.use('/auth', authRoutes); 
+// Configuração das rotas
 app.use('/users', userRoutes);
+app.use('/auth', authRoutes);
 app.use('/api', filmeRoutes);
-
 app.use('/generos', generoRoutes);
 app.use('/avaliacao', avaliacaoRoutes);
 app.use('/doc', swaggerRoute);
@@ -35,6 +31,6 @@ app.use('/doc', swaggerRoute);
 // Define porta de forma segura para dev e produção
 const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
 
-app.listen(PORT, () => { // in line não precisa da chave
+app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });

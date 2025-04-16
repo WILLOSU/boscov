@@ -1,0 +1,372 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Boscov Project - Documentation",
+    "description": "Nesta documentação, você poderá consultar os endpoints da API e também testar todas as rotas disponíveis. Não se esqueça de se registrar e realizar a autorização.",
+    "contact": {
+      "email": "william.mota@estudante.iftm.edu.br"
+    },
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "",
+      "description": "Render Server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local Server"
+    }
+  ],
+  "paths": {
+    "/usuario/": {
+      "post": {
+        "summary": "Criar novo usuário",
+        "description": "Rota responsável por cadastrar um novo usuário no sistema.",
+        "tags": ["Usuário"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "Novo Usuário": {
+                  "value": {
+                    "nome": "William Mota",
+                    "senha": "minhaSenha123",
+                    "email": "william@email.com",
+                    "apelido": "Will",
+                    "dataNascimento": "2000-01-01T00:00:00Z",
+                    "tipoUsuarioId": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados obrigatórios ausentes ou tipo de usuário inválido"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/usuario/{id}": {
+      "get": {
+        "summary": "Buscar usuário pelo ID",
+        "description": "Retorna os dados de um único usuário com base no ID informado.",
+        "tags": ["Usuário"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID do usuário a ser buscado",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "id": 1,
+                  "nome": "William Mota",
+                  "email": "william@email.com",
+                  "status": true,
+                  "apelido": "Will",
+                  "dataNascimento": "2000-01-01T00:00:00Z",
+                  "dataCriacao": "2025-04-01T10:00:00Z",
+                  "dataAtualizacao": "2025-04-13T12:00:00Z",
+                  "tipoUsuarioId": 1
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/usuario": {
+      "get": {
+        "summary": "Buscar todos os usuários",
+        "description": "Retorna uma lista com todos os usuários cadastrados.",
+        "tags": ["Usuários"],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/usuario/{id}/": {
+      "put": {
+        "summary": "Atualizar um usuário",
+        "description": "Atualiza os dados de um usuário existente pelo ID.",
+        "tags": ["Usuários"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID do usuário a ser atualizado",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "Atualização de usuário": {
+                  "value": {
+                    "nome": "Joao Silva",
+                    "senha": "123456",
+                    "email": "joao.novo@email.com",
+                    "status": true,
+                    "apelido": "js",
+                    "dataNascimento": "1981-03-13",
+                    "tipoUsuarioId": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "summary": "Autenticar usuário",
+        "description": "Verifica as credenciais do usuário e retorna um token JWT caso estejam corretas.",
+        "tags": ["Autenticação"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "joao.novo@email.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "description": "Token JWT para autenticação"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/filme/": {
+      "get": {
+        "summary": "Buscar todos os filmes",
+        "description": "Retorna a lista completa de filmes cadastrados no sistema.",
+        "tags": ["Filmes"],
+        "responses": {
+          "200": {
+            "description": "Lista de filmes recuperada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Filme"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/filme/{id}/": {
+      "get": {
+        "summary": "Buscar filme por ID",
+        "description": "Retorna os dados de um único filme com base no ID fornecido.",
+        "tags": ["Filmes"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID do filme",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Filme encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Filme"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Filme não encontrado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "senha": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "apelido": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataNascimento": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataCriacao": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataAtualizacao": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tipoUsuarioId": {
+            "type": "integer"
+          }
+        },
+        "required": ["nome", "senha", "email", "dataNascimento", "tipoUsuarioId"]
+      }
+    }
+  }
+}
