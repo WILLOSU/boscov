@@ -78,5 +78,19 @@ export const CardFooter = styled.article`
       transform: rotate(-10deg) scale(1.2);
     }
   }
+  
 `;
+// abaixo do poster
+export const CardRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .detalhes {
+    margin-top: 2.5rem; /* Aumenta o espaço entre a imagem e o texto */
+    font-size: 14px;
+    text-align: left;
+  }
+`;
+
 

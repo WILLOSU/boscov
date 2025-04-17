@@ -1,29 +1,56 @@
-import React from 'react';
-import { Navbar } from '../../components/Navbar/Navbar';
-import { Card } from '../../components/Card/Card';
-import { filmes } from '../../Datas';
-import { HomeBody } from "./HomeStyled"
+import { Filme } from "../../Datas"; // Importe a mesma interface que o Card usa
+import { Navbar } from "../../components/Navbar/Navbar";
+import { Card } from "../../components/Card/Card";
+import { HomeBody, HomeHeader } from "./HomeStyled";
+import { getAllFilmes, getTopFilme } from "../../services/filmesServices";
+import { useEffect, useState } from "react";
 
+export default function Home() {
+  const [filmes, setFilmes] = useState<Filme[]>([]); // aprendendo o tal dos hooks
+  //const [topFilme, setTopFilme] = useState<Filme | null>(null);
 
-// utilizei o map para iterar, para colocar cada objeto ser um card diferente!
+  useEffect(() => {
+    // efeito callback e um array de dependência
+    async function fetchFilmes() {
+      try {
+        const response = await getAllFilmes();
+        setFilmes(response.data.results);
 
-const Home: React.FC = () => {
+        //const topResponse = await getTopFilme();
+        //setTopFilme(topResponse.data.filme);
+      } catch (error) {
+        console.error("Erro ao buscar filmes:", error);
+      }
+    }
+
+    fetchFilmes(); // faça um vez só evita loop infinito, deixando array vazio
+  }, []);
+
   return (
     <>
       <Navbar />
+      <HomeHeader>
+        {filmes.length > 0 ? (
+          filmes.map((item: Filme, index: number) => (
+            <Card key={index} filme={item
+
+              
+            } />
+          ))
+        ) : (
+          <p>Carregando filmes...</p>
+        )}
+      </HomeHeader>
+
       <HomeBody>
-        {filmes.map((item, index) => (
-          <Card key={index} filme={item} />
-        ))}
+        {filmes.length > 0 ? (
+          filmes.map((item: Filme, index: number) => (
+            <Card key={index} filme={item} />
+          ))
+        ) : (
+          <p>Carregando filmes...</p>
+        )}
       </HomeBody>
-   
     </>
   );
-};
-
-// utilizei o conceito de componetização para facilitar, pois
-// caso não utilizasse ia precisar rodar card por card.
-
-export default Home;
-
-
+}

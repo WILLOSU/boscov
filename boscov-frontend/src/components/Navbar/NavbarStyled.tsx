@@ -25,6 +25,12 @@ export const ImageLogo = styled.img`
   cursor: pointer;
   background-color: #005954;
   box-shadow: 4px 4px 10px #004240, -4px -4px 10px #007e6e;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);  // Efeito de aumento
+    box-shadow: 6px 6px 15px #004240, -6px -6px 15px #007e6e;  // Efeito de sombra ao passar o mouse
+  }
 `;
 
 // Input
@@ -35,6 +41,7 @@ export const InputSpace = styled.div`
   display: flex;
   align-items: center;
   border: 1px solid #005954;
+  transition: border 0.3s ease, transform 0.3s ease;
 
   // Pai - Input
   // i icone
@@ -75,6 +82,11 @@ export const InputSpace = styled.div`
       border: 2px solid #2f2c79;
     }
   }
+
+  &:hover {
+    transform: scale(1.02); // Efeito de leve aumento no container do input
+    border: 1px solid #2f2c79; // Mudança na borda ao passar o mouse
+  }
 `;
 
 // Button
@@ -97,5 +109,6 @@ export const Button = styled.button`
   &:hover {
     background-color: #757575;
     color: #f5f5f5;
+    transform: translateY(-5px); // Efeito de elevação
   }
 `;

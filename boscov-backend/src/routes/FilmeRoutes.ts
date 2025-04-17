@@ -11,7 +11,7 @@ const filmeController = new FilmeController()
 
 
 // As rotas de filmes que utilizam o middleware de autenticação
-router.get('/', filmeController.getAll);
+router.get('/posts', filmeController.getAll);
 router.get('/top', filmeController.getTopFilme);
 router.get('/search', filmeController.findBySearch);
 router.get('/:id', filmeController.getById);

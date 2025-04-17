@@ -1,5 +1,8 @@
+import { JSX } from "react/jsx-runtime";
+
 // Interface para definir o tipo de um filme
 export interface Filme {
+  map(arg0: (item: Filme, index: number) => JSX.Element): import("react").ReactNode;
   nome: string;
   sinopse: string;
   poster: string;
