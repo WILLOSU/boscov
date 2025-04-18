@@ -111,7 +111,7 @@ export const restoreFilme = async (id: number) => {
     });
   };
 // Buscar filmes pelo nome com paginação
-export const findFilmesByNome = async (nome: string, limit: number = 5, offset: number = 0) => {
+export const findFilmesByNome = async (nome: string, limit: number = 4, offset: number = 0) => {
   return await prisma.filme.findMany({
     where: {
       nome: {
