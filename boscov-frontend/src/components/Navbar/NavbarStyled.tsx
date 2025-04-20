@@ -45,7 +45,7 @@ export const InputSpace = styled.div`
 
   // Pai - Input
   // i icone
-  i {
+  button {
     position: absolute;
     top: 1;
     right: 0.2rem;
