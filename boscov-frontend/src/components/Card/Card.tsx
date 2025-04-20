@@ -8,12 +8,13 @@ import {
 
 interface CardProps {
   filme: Filme;
+  top?: boolean; // 
 }
 
-export function Card({ filme }: CardProps) {
+export function Card({ filme, top = false }: CardProps) {
   return (
     <CardContainer>
-      <CardBody>
+      <CardBody top={top}>
         {/* Parte esquerda - nome e sinopse */}
         <div>
           <h2>{filme.nome}</h2>

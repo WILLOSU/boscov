@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+interface CardBodyProps {
+  top?: boolean;
+}
+
 export const CardContainer = styled.section`
   display: flex;
   flex-direction: column;
@@ -16,22 +20,27 @@ export const CardContainer = styled.section`
   &:hover {
     transform: translateY(-5px);
   }
+  
 `;
 
-export const CardBody = styled.article`
+export const CardBody = styled.article<CardBodyProps>`
   display: flex;
-  align-items: center;
+  align-items: flex-start; 
   justify-content: center;
+  justify-content: space-between;
   padding: 16px; /* Adiciona espaço interno */
   gap: 1rem;
 
+  font-size: ${props => props.top ? "1.5rem" : ".9rem"};
+
   h2 {
     margin-bottom: 1rem;
+    font-size: ${props => props.top ? "3rem" : "1.5rem"}; // usei templantes string
   }
 
   img {
-    width: 120px;
-    height: 180px;
+    width: ${(props) => (props.top ? "164px" : "120px")};
+    height: ${(props) => (props.top ? "236px" : "180px")};
 
     flex-shrink: 0;
     overflow: hidden;
