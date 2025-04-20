@@ -112,3 +112,14 @@ export const Button = styled.button`
     transform: translateY(-5px); // Efeito de elevação
   }
 `;
+
+export const ErrorSpan = styled.span`
+  background-color: #ffcdcd;
+  color: #9e0000;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  font-size: 1rem;
+  border-radius: 7px;
+`;
+
