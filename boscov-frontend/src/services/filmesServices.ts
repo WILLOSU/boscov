@@ -22,18 +22,10 @@ export async function getTopFilme() {
   }
 }
 
-export function searchFilmes(titulo: string) {
-  console.log("Base URL:", baseUrl);
-  const url = `${baseUrl}/api/search?nome=${titulo}`; // <- CORRIGIDO AQUI
-  console.log("URL da requisição:", url);
+export const searchFilmes = async (titulo: string, limit: number = 1000, offset: number = 0) => {
+  const url = `${baseUrl}/api/search`;
 
-  return axios.get(url)
-    .then(response => {
-      console.log("Resposta:", response.status);
-      return response;
-    })
-    .catch(error => {
-      console.error("Erro no serviço searchFilmes:", error);
-      throw error;
-    });
-}
+  return await axios.get(url, {
+    params: { nome: titulo, limit, offset }
+  });
+};

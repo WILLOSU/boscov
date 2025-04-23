@@ -7,7 +7,7 @@ import Home from "./pages/Home/Home";
 import { Search } from "./pages/Search/Search";
 import { GlobalStyled } from "./GlobalStyled";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
-
+import Authentication from "./pages/Authentication/Authentication";
 
 
 // Definindo as rotas
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Navbar />, // Navbar tem o <Outlet /> carrega rotas filhas
-    errorElement:<ErrorPage />,
+    errorElement: <ErrorPage />,
 
     children: [
       {
@@ -23,10 +23,14 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/search/:title", 
+        path: "/search/:title",
         element: <Search />,
       },
     ],
+  },
+  {
+    path: "/auth",
+    element: <Authentication />,
   },
 ]);
 

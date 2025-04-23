@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { searchFilmes } from "../../services/filmesServices";
-import axios, { AxiosError } from "axios"; // Importe AxiosError para tipar o erro
+import axios, { AxiosError } from "axios";
 import { Card } from "../../components/Card/Card";
 import { ContainerResults, SearchPosts, TextResults } from "./SearchStyled";
 interface Filme {
@@ -23,13 +23,9 @@ export function Search() {
 
   const search = useCallback(async () => {
     try {
-      const response = await searchFilmes(title);
+      const response = await searchFilmes(title, 1000, 0);
 
       if (response.data && response.data.results) {
-        if (response.data.results.length > 0) {
-          console.log("Primeiro filme da lista:", response.data.results[0]);
-        }
-
         setFilmes(response.data.results);
         setErro(null);
       } else {
@@ -114,9 +110,9 @@ export function Search() {
             key={filme.id}
             filme={{
               ...filme,
-              title: filme.nome, // Adiciona a propriedade title que o Card espera
+              title: filme.nome,
             }}
-            top={true}
+            top={false}
           />
         ))}
       </SearchPosts>

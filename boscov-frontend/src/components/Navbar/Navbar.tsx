@@ -2,9 +2,10 @@ import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import logo from "../Imagens/LogoBF.png";
-import { Button, Nav, ImageLogo, InputSpace, ErrorSpan } from "./NavbarStyled";
+import { Nav, ImageLogo, InputSpace, ErrorSpan } from "./NavbarStyled";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "../Button/Button";
 
 // Tipagem dos dados do formulário
 interface SearchFormData {
@@ -36,6 +37,10 @@ export const Navbar: React.FC = () => {
     reset(); // limpa o campo após pesquisa
   };
 
+  function goAuth(){
+    navigate('/auth');
+  }
+
   return (
     <>
       <Nav>
@@ -57,7 +62,8 @@ export const Navbar: React.FC = () => {
           {/* retorna para home, navegação interna*/}
           <ImageLogo src={logo} alt="Logo do Boscov Filmes" />
         </Link>
-        <Button>Entrar</Button>
+        <Button onClick={goAuth}>Entrar</Button>
+
       </Nav>
       {errors.title && <ErrorSpan>{errors.title.message}</ErrorSpan>}{" "}
       {/* valida se é true ou false*/}

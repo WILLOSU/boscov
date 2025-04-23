@@ -89,29 +89,7 @@ export const InputSpace = styled.div`
   }
 `;
 
-// Button
-export const Button = styled.button`
-  background-color: #ffffff;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  padding: 0.4rem 1rem;
-  color: #005954;
-  transition: all 0.4s ease-in-out;
-  cursor: pointer;
-  border-radius: 0.3rem;
-  font-family: Roboto, arial;
 
-  font-weight: 500;
-  letter-spacing: 0.1rem;
-  text-transform: uppercase;
-
-  &:hover {
-    background-color: #757575;
-    color: #f5f5f5;
-    transform: translateY(-5px); // Efeito de elevação
-  }
-`;
 
 export const ErrorSpan = styled.span`
   background-color: #ffcdcd;
