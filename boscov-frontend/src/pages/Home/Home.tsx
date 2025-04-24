@@ -5,6 +5,8 @@ import { Card } from "../../components/Card/Card";
 import { HomeBody, HomeHeader } from "./HomeStyled";
 import { getAllFilmes, getTopFilme } from "../../services/filmesServices";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+
 
 // Defina tipos para seus estados
 type LoadingState = { all: boolean; top: boolean };
@@ -74,6 +76,7 @@ export default function Home() {
 
     fetchFilmes();
     fetchTopFilme();
+    console.log(Cookies.get("token"));
   }, []);
 
   return (

@@ -3,22 +3,16 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import logo from "../Imagens/LogoBF.png";
 import { Nav, ImageLogo, InputSpace, ErrorSpan } from "./NavbarStyled";
-import { z } from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../Button/Button";
+import searchSchema from "../../schemas/SearchSchema";
 
 // Tipagem dos dados do formulário
 interface SearchFormData {
   title: string;
 }
 
-const searchSchema = z.object({
-  title: z
-  .string()
-  .nonempty({ message: "A pesquisa não pode ser vazia" })
-  .refine(value => !/^\s*$/.test(value),{ 
-    message: "A pesquisa não pode ter apenas espaços"}), // negando a regex, se tem espaço, ai nega
-});
 
 export const Navbar: React.FC = () => {
   const {

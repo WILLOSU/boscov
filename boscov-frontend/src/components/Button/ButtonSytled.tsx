@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
-interface ButtonSpaceProps {
-  variant?: "default" | "signin" | "signup";
+interface ButtonSpaceProps extends React.HTMLAttributes<HTMLButtonElement> {
+  $variant?: "default" | "signin" | "signup";
 }
 
 export const ButtonSpace = styled.button<ButtonSpaceProps>`
@@ -13,21 +13,21 @@ export const ButtonSpace = styled.button<ButtonSpaceProps>`
   transition: background-color 0.3s ease;
 
   ${(props) =>
-    props.variant === "default" &&
+    props.$variant === "default" &&
     css`
       background-color: #e0e0e0;
       color: #000;
     `}
 
   ${(props) =>
-    props.variant === "signin" &&
+    props.$variant === "signin" &&
     css`
       background-color: #007e7e; /* cor 005954 um pouco mais clara */
       color: #fff;
     `}
 
   ${(props) =>
-    props.variant === "signup" &&
+    props.$variant === "signup" &&
     css`
       background-color: #005954;
       color: #fff;

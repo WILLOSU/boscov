@@ -8,11 +8,15 @@ interface ButtonProps {
   variant?: "default" | "signin" | "signup"; // <- AQUI
 }
 
-export function Button({ type = "button", onClick, children, variant = "default" }: ButtonProps) {
+export function Button({
+  type = "button",
+  onClick,
+  children,
+  variant = "default",
+}: ButtonProps) {
   return (
-    <ButtonSpace type={type} onClick={onClick} variant={variant}>
+    <ButtonSpace type={type} onClick={onClick} $variant={variant}>
       {children}
     </ButtonSpace>
   );
 }
-
