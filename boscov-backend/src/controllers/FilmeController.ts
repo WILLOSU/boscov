@@ -28,7 +28,7 @@ export class FilmeController {
       let numOffset = Number(offset)
 
       if (!numLimit) {
-        numLimit = 5
+        numLimit = 4
       }
       if (!numOffset) {
         numOffset = 0

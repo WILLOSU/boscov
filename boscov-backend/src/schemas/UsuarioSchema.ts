@@ -8,8 +8,6 @@ export const usuarioSchema = z.object({
   email: z.string()
     .regex(emailRegex, 'E-mail inválido, verifique o formato ex: nome@dominio.com'),
   apelido: z.string().optional(),
-  dataNascimento: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    message: 'Data de nascimento inválida',
-  }),
-  tipoUsuarioId: z.number({ invalid_type_error: 'Tipo de usuário deve ser um número' }),
+  dataNascimento: z.string().optional(),
+  tipoUsuarioId: z.number().optional(),
 });

@@ -71,10 +71,12 @@ model usuario {
   email           String      @unique(map: "Usuario_email_key")
   status          Boolean     @default(true)
   apelido         String?
-  dataNascimento  DateTime
+  dataNascimento  DateTime?
   dataCriacao     DateTime    @default(now())
   dataAtualizacao DateTime
   tipoUsuarioId   Int
+  avatar          String?
+  background      String?
   avaliacao       avaliacao[]
   tipousuario     tipousuario @relation(fields: [tipoUsuarioId], references: [id], map: "Usuario_tipoUsuarioId_fkey")
 

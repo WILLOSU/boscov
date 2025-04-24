@@ -1,7 +1,7 @@
 // src/services/FilmeService.ts
 import { prisma } from './PrismaService';
 
-export const getAllFilmes = async (limit: number = 5, offset: number = 0) => {
+export const getAllFilmes = async (limit: number = 4, offset: number = 0) => {
   // Aqui mantemos a implementação do Prisma para paginação
   return await prisma.filme.findMany({
     skip: offset,
