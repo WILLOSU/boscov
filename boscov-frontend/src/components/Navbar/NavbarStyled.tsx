@@ -101,3 +101,31 @@ export const ErrorSpan = styled.span`
   border-radius: 7px;
 `;
 
+export const UserLoggedSpace = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  gap: 1rem;
+
+  h2 {
+    font-size: 1.1rem;
+    color: #f5f5f5;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  h2:hover {
+    color: #757575;
+  }
+
+  i {
+    font-size: 1.5rem;
+    color: #f5f5f5;
+    cursor: pointer;
+  }
+
+  i:hover {
+    color: #757575;
+  }
+`;
