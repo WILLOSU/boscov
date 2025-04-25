@@ -78,6 +78,43 @@ export class UserController {
     }
   }
 
+  // GET /user/getById (para buscar o usuário logado)
+  async getLoggedInUser(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).userId;
+
+      if (!userId) {
+        res.status(401).json({ error: "Não autenticado" });
+        return;
+      }
+
+      const user = await prisma.usuario.findUnique({
+        where: { id: Number(userId), status: true },
+        select: {
+          id: true,
+          nome: true,
+          email: true,
+          apelido: true,
+          dataNascimento: true,
+          dataCriacao: true,
+          dataAtualizacao: true,
+          status: true,
+          tipousuario: true,
+        },
+      });
+
+      if (!user) {
+        res.status(404).json({ error: "Usuário não encontrado ou inativo" });
+        return;
+      }
+
+      res.json(user);
+    } catch (error) {
+      console.error("Erro ao buscar usuário logado:", error);
+      res.status(500).json({ error: "Erro ao buscar usuário logado" });
+    }
+  }
+
   // POST /usuarios
   async create(req: Request, res: Response): Promise<void> {
     try {
