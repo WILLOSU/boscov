@@ -9,6 +9,11 @@ export interface SignupData {
   confirmPassword: string; 
 }
 
+export interface SigninData {
+  email: string;
+  password: string;
+}
+
 const baseUrl: string = "http://localhost:3000";
 
 export async function signup(data: SignupData & { confirmPassword: string }) {
@@ -44,6 +49,37 @@ const requestBody = {
   }
 }
 
+// SIGNIN
+export async function signin(data: SigninData) {
+  const { email, password } = data;
+ 
+  const requestBody = {
+    email: email,
+    password: password, // A chave deve ser 'password' de acordo com o backend
+  };
+
+  try {
+    const response = await axios.post(`${baseUrl}/auth`, requestBody);
+   
+    // Certifique-se de que o token está no response.data.token
+    if (response.status === 200 && response.data.token) {
+      return response.data;  // Retorna o token diretamente
+    } else {
+      throw new Error(`Erro ao fazer login: Status ${response.status}`);
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Erro ao fazer login:", error.response?.data || error.message);
+      throw error;
+    } else {
+      console.error("Erro desconhecido no login:", error);
+      throw new Error("Erro desconhecido ao fazer login.");
+    }
+  }
+}
+
+
+// Função para gerar o nome de usuário com base no nome
 function generateUserName(name: string): string {
   const nameLowerCaseWithoutSpaces = name.replace(/\s/g, "").toLowerCase();
   const randomNumber = Math.floor(Math.random() * 1000);

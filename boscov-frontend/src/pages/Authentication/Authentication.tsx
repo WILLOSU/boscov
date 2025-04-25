@@ -3,12 +3,14 @@ import { Button } from "../../components/Button/Button";
 import { Input } from "../../components/Input/Input";
 import { AuthContainer, Section } from "./AuthenticationStyled";
 import signupSchema from "../../schemas/SignupSchema";
+import signinSchema from "../../schemas/SigninSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorSpan } from "../../components/Navbar/NavbarStyled";
 import { signup, SignupData } from "../../services/usuariosServices";
+import { signin, SigninData } from "../../services/usuariosServices";
+
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-
 
 export function Authentication() {
   // dois componentes em formulário
@@ -24,12 +26,7 @@ export function Authentication() {
     register: registerSignin,
     handleSubmit: handleSubmitSignin,
     formState: { errors: errorsSignin },
-  }  = useForm({ resolver: zodResolver(signupSchema) });
-
-
-  function inHanleSubmit(data: unknown) {
-    console.log(data);
-  }
+  } = useForm({ resolver: zodResolver(signinSchema) });
 
   const navigate = useNavigate();
 
@@ -37,12 +34,31 @@ export function Authentication() {
     try {
       const response = await signup(data);
       if (response.data && response.data.token) {
-        Cookies.set("token", response.data.token, { expires: 1, path: '/' }); // Salva o token como cookie
-        navigate('/');
-        console.log("Token de cadastro salvo no cookie:", Cookies.get("token"));
+        Cookies.set("token", response.data.token, { expires: 1, path: "/" }); // Salva o token como cookie
+        navigate("/");
+        
       } else {
-        console.error("Token não recebido na resposta de cadastro:", response.data);
+        console.error(
+          "Token não recebido na resposta de cadastro:",
+          response.data
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function inHandleSubmit(data: SigninData): Promise<void> {
+    try {
+      const response = await signin(data);
+
+      // Aqui você pode acessar diretamente o token da resposta
+      if (response && response.token) {
+        Cookies.set("token", response.token, { expires: 1, path: "/" });
+        navigate("/");
        
+      } else {
+        console.error("Token não recebido na resposta de login:", response);
       }
     } catch (error) {
       console.log(error);
@@ -54,7 +70,7 @@ export function Authentication() {
       <Section type="signin">
         {/* SIGNIN */}
         <h2>Entrar</h2>
-        <form onSubmit={handleSubmitSignin(inHanleSubmit)}>
+        <form onSubmit={handleSubmitSignin(inHandleSubmit)}>
           <Input
             type="email"
             placeholder="E-mail"

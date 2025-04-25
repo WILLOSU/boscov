@@ -5,7 +5,6 @@ import { Card } from "../../components/Card/Card";
 import { HomeBody, HomeHeader } from "./HomeStyled";
 import { getAllFilmes, getTopFilme } from "../../services/filmesServices";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 
 
 // Defina tipos para seus estados
@@ -26,7 +25,6 @@ export default function Home() {
       try {
         // Buscar todos os filmes
         const response = await getAllFilmes();
-        console.log("Resposta getAllFilmes:", response);
 
         // Ajuste conforme a estrutura real retornada pela sua API
         if (response.data && response.data.results) {
@@ -50,7 +48,6 @@ export default function Home() {
       try {
         // Buscar o filme em destaque
         const topResponse = await getTopFilme();
-        console.log("Resposta getTopFilme:", topResponse);
 
         if (topResponse.data && topResponse.data.movie) {
           setTopFilme(topResponse.data.movie);
@@ -76,12 +73,10 @@ export default function Home() {
 
     fetchFilmes();
     fetchTopFilme();
-    console.log(Cookies.get("token"));
   }, []);
 
   return (
     <>
-     
       <HomeHeader>
         {loading.top ? (
           <p>Carregando filme em destaque...</p>
