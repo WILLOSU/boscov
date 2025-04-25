@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { loginService, generateToken } from '../services/AuthService';
-import jwt from 'jsonwebtoken'; 
+
 
 export class AuthController {
   static async login(req: Request, res: Response): Promise<void> {
@@ -34,16 +34,15 @@ export class AuthController {
         httpOnly: true, // O cookie só pode ser acessado pelo servidor
         secure: process.env.NODE_ENV === 'production', // Envie apenas por HTTPS em produção
         sameSite: 'strict', // Proteção contra ataques CSRF
-        // maxAge: 24 * 60 * 60 * 1000, // Opcional: tempo de vida do cookie (em milissegundos)
+        maxAge: 24 * 60 * 60 * 1000, // Tempo de vida do cookie (1 dia)
       });
-
 
       // Remover a senha do objeto de resposta
       const { senha, ...userWithoutPassword } = user;
 
       // Retorna o token e os dados do usuário sem a senha
       res.status(200).json({
-        token,
+        token, // Envia o token também no corpo da resposta
         user: userWithoutPassword,
       });
     } catch (error) {
