@@ -1,13 +1,13 @@
 import { InputHTMLAttributes } from "react";
-import { UseFormRegister } from "react-hook-form";
+import { UseFormRegister, FieldValues, Path } from "react-hook-form";
 import { InputSpace } from "./InputStyled";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  name: string;
-  register: UseFormRegister<any>; 
+interface InputProps<T extends FieldValues> extends InputHTMLAttributes<HTMLInputElement> {
+  name: Path<T>;
+  register: UseFormRegister<T>;
 }
 
-export function Input({ type, placeholder, name, register, ...rest }: InputProps) {
+export function Input<T extends FieldValues>({ type, placeholder, name, register, ...rest }: InputProps<T>) {
   return (
     <InputSpace
       type={type}

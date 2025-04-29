@@ -9,6 +9,7 @@ import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import Authentication from "./pages/Authentication/Authentication";
 import Profile from "./pages/Profile/Profile";
 import UserProvider from "./Context/UserContext";
+//import { ManageFilmes } from "./pages/ManageNews/ManageFilmes";
 
 // Definindo as rotas
 const router = createBrowserRouter([
@@ -26,16 +27,34 @@ const router = createBrowserRouter([
         path: "/search/:title",
         element: <Search />,
       },
+      
       {
         path: "/profile",
         element: <Profile />,
       },
+
+      {/*
+
+      {
+        path: "/manage-filmes/:action", 
+        element: <ManageFilmes />,
+      },
+      */}
+      
     ],
   },
   {
     path: "/auth",
     element: <Authentication />,
   },
+   
+  {/*
+  {
+    path: "/manage-filmes/:action",
+    element: <ManageFilmes />,
+  },
+
+  */}
 ]);
 
 // Renderizando o app com estilos globais e router

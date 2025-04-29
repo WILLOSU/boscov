@@ -10,6 +10,9 @@ import React, {
     id: number;
     nome: string;
     email: string;
+    username?: string;  
+    avatar?: string;   
+    background?: string;
   }
   
   export interface UserContextType {
@@ -30,7 +33,7 @@ import React, {
   
   // Componente Provider
   const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<UserData | null>(null);
+    const [user, setUser] = useState<UserData | null>(null);// estado global
   
     return (
       <UserContext.Provider value={{ user, setUser }}>

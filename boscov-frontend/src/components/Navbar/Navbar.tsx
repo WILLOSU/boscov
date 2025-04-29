@@ -48,7 +48,8 @@ export const Navbar: React.FC = () => {
 
   const findUserLogged = useCallback(async (): Promise<void> => {
     try {
-      const response: AxiosResponse = await userLogged();
+      const response: AxiosResponse = await userLogged(); // pega usuário logado e da um
+                                                          // setUser
       setUser(response.data);
     } catch (error) {
       console.error(error);
@@ -80,7 +81,7 @@ export const Navbar: React.FC = () => {
         </Link>
         {user ? (
           <UserLoggedSpace>
-            <Link to="/profile">
+            <Link to="/profile"  style={{textDecoration: 'none'}}>
               <h2>{user.nome}</h2>
             </Link>
             <i className="bi bi-box-arrow-right" onClick={signout}></i>
