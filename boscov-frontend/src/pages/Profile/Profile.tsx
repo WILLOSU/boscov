@@ -9,7 +9,7 @@ import {
   ProfileIconAdd,
   ProfileIconEdit,
   ProfileUser,
-  ProfilePosts,
+  ProfileFilmes,
 } from "./ProfileStyled";
 import { getAllPostsByUser } from "../../services/filmesServices";
 import { Card } from "../../components/Card/Card";
@@ -79,19 +79,19 @@ export function Profile() {
         </ProfileActions>
       </ProfileHeader>
 
-      <ProfilePosts>
+      <ProfileFilmes>
         {isLoading ? (
-          <p>Carregando posts...</p>
+          <p>Carregando Filmes...</p>
         ) : error ? (
           <p>
             {typeof error === "object" ? "Erro ao carregar os dados" : error}
           </p>
         ) : posts.length === 0 ? (
-          <p>Nenhum filme encontrado</p>
+          <p>Nenhum Filme encontrado</p>
         ) : (
           posts.map((filme) => <Card key={filme.id} filme={filme} />)
         )}
-      </ProfilePosts>
+      </ProfileFilmes>
     </ProfileContainer>
   );
 }

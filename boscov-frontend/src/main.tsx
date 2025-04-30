@@ -9,7 +9,7 @@ import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import Authentication from "./pages/Authentication/Authentication";
 import Profile from "./pages/Profile/Profile";
 import UserProvider from "./Context/UserContext";
-//import { ManageFilmes } from "./pages/ManageNews/ManageFilmes";
+import { ManageFilmes } from "./pages/ManageNews/ManageFilmes";
 
 // Definindo as rotas
 const router = createBrowserRouter([
@@ -33,13 +33,13 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
 
-      {/*
+      
 
       {
         path: "/manage-filmes/:action", 
         element: <ManageFilmes />,
       },
-      */}
+      
       
     ],
   },

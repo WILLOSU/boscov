@@ -1,9 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Filme } from "../Datas"; // Importe o tipo Filme do seu arquivo Datas
+import { FilmesData } from "../components/Interface/Types";
 
 const baseUrl: string = "http://localhost:3000";
 //const baseUrl = "https://renderboscov.onrender.com";
+
 
 export async function getAllFilmes() {
   try {
@@ -53,8 +55,8 @@ export async function getAllPostsByUser(userId: number): Promise<Filme[]> {
   }
 }
 
-/*
-export function createFilmes(body) {
+
+export function createFilmes(body: FilmesData) {
   const response = axios.post(`${baseUrl}/api/create`, body, {
     headers: {
       Authorization: `Bearer ${Cookies.get("token")}`,
@@ -63,6 +65,17 @@ export function createFilmes(body) {
   return response;
 }
 
+export function editFilmes(body: FilmesData) {
+  const response = axios.post(`${baseUrl}/api/create`, body, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  });
+  return response;
+}
+
+
+/*
 export function getFilmesById(id) {
   const response = axios.get(`${baseUrl}/api/byIdPost/${id}`, {
     headers: {
@@ -89,5 +102,7 @@ export function deleteFilmes (id) {
   });
   return response;
 }
-  */
+
+*/
+
 

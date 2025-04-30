@@ -85,7 +85,7 @@ export const ProfileIconAdd = styled.i`
   }
 `;
 
-export const ProfilePosts = styled.main`
+export const ProfileFilmes = styled.main`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 15px;
