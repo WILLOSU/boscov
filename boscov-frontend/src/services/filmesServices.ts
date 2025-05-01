@@ -59,7 +59,7 @@ export async function getAllPostsByUser(userId: number): Promise<Filme[]> {
 
 // Função para criar filme
 export async function createFilmes(filmesData: FilmesData) {
-  const response = await axios.post(`${baseUrl}/api`, filmesData, {
+  const response = await axios.post(`${baseUrl}/api/create`, filmesData, {
     headers: {
       Authorization: `Bearer ${Cookies.get("token")}`,
     },
