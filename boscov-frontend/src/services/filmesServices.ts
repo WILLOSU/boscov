@@ -55,54 +55,66 @@ export async function getAllPostsByUser(userId: number): Promise<Filme[]> {
   }
 }
 
+// CRUD COM PERFEIÇÃO !!
 
-export function createFilmes(body: FilmesData) {
-  const response = axios.post(`${baseUrl}/api/create`, body, {
+// Função para criar filme
+export async function createFilmes(filmesData: FilmesData) {
+  const response = await axios.post(`${baseUrl}/api`, filmesData, {
     headers: {
       Authorization: `Bearer ${Cookies.get("token")}`,
     },
   });
-  return response;
+  return response.data;
 }
 
-export function editFilmes(body: FilmesData) {
-  const response = axios.post(`${baseUrl}/api/create`, body, {
+
+// Função para buscar filme por ID com tipagem
+export async function getFilmesById(id: string) {
+  const response = await axios.get<FilmesData>(`${baseUrl}/api/byIdPost/${id}`, {
     headers: {
       Authorization: `Bearer ${Cookies.get("token")}`,
     },
   });
-  return response;
+  return response.data;
 }
 
-
-/*
-export function getFilmesById(id) {
-  const response = axios.get(`${baseUrl}/api/byIdPost/${id}`, {
+// Função para atualizar filme
+export async function updateFilme(id: string, filmesData: FilmesData) {
+  const response = await axios.patch(`${baseUrl}/api/${id}`, filmesData, {
     headers: {
       Authorization: `Bearer ${Cookies.get("token")}`,
     },
   });
-  return response;
+  return response.data;
 }
 
-export function editFilmes(body, id) {
-  const response = axios.patch(`${baseUrl}/api/update/${id}`, body, {
+
+// Função para excluir filme
+export async function deleteFilme(id: string) {
+  const response = await axios.delete(`${baseUrl}/api/${id}`, {
     headers: {
       Authorization: `Bearer ${Cookies.get("token")}`,
     },
   });
-  return response;
+  return response.data;
 }
 
-export function deleteFilmes (id) {
-  const response = axios.delete(`${baseUrl}/api/delete/${id}`, {
+// Função para desativar filme 
+export async function desativarFilme(id: string) {
+  const response = await axios.patch(`${baseUrl}/api/${id}/desativar`, {}, {
     headers: {
       Authorization: `Bearer ${Cookies.get("token")}`,
     },
   });
-  return response;
+  return response.data;
 }
 
-*/
-
-
+// Função para restaurar filme
+export async function restaurarFilme(id: string) {
+  const response = await axios.patch(`${baseUrl}/api/${id}/restaurar`, {}, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  });
+  return response.data;
+}

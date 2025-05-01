@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
-import { ButtonSpace } from "./ButtonSytled";
+import { ButtonHTMLAttributes } from "react";
+import { ButtonSpace,  } from "./ButtonSytled";
 
-interface ButtonProps {
-  type?: "button" | "submit" | "reset";
-  onClick?: () => void;
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
+  type?: "button" | "submit" | "reset";
+  onClick?: () => void;  
   variant?: "default" | "signin" | "signup"; // <- AQUI
 }
 
