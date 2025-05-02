@@ -12,7 +12,7 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
       res.status(403).json({ message: 'Token não fornecido' });
       return; // Apenas sai da função, não retorna o objeto res
     }
-
+    
     const parts = authHeader.split(' ');
 
     if (parts.length !== 2 || parts[0] !== 'Bearer') {
@@ -34,6 +34,7 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
     (req as any).userId = user.id;
     next();
   } catch (error) {
+    console.error("Erro ao verificar token:", error);
     res.status(401).json({ message: 'Token inválido ou expirado' });
     // Não chama next() aqui porque já enviou uma resposta
   }

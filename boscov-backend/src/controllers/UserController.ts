@@ -142,6 +142,7 @@ export class UserController {
           dataCriacao: new Date(),
           dataAtualizacao: new Date(),
           tipousuario: { connect: { id: 1 } }, // Um tipo de usuário padrão, se necessário
+
         },
       });
 

@@ -16,17 +16,19 @@ router.get('/top', filmeController.getTopFilme);
 router.get('/search', filmeController.findBySearch);
 router.get('/:id', filmeController.getById);
 
-//router.post('/', verifyToken, validate(filmeSchema), filmeController.create);
-//router.put('/:id', validate(filmeSchema), filmeController.update);
-//router.delete('/:id', filmeController.delete);
-//router.patch('/:id/desativar', filmeController.delete);
-//router.patch('/:id/restaurar', filmeController.restore);
+
+router.get("/byUserId/:id", filmeController.findPostsByUserId);
+router.post('/', verifyToken, validate(filmeSchema), filmeController.createFilmes);
+router.put('/:id', validate(filmeSchema), filmeController.editFilmes);
+router.delete('/:id', filmeController.deleteFilmes);
+router.patch('/:id/desativar', filmeController.deleteFilmes);
+router.patch('/:id/restaurar', filmeController.restoreFilmes);
 
 
 // Rotas para avaliações de filmes
 router.patch("/nota/:id", verifyToken, validate(avaliacaoSchema), filmeController.avaliarFilme)
-//router.delete("/:id/nota", verifyToken, filmeController.removerAvaliacao)
-//router.get("/:id/avaliacoes", filmeController.getAvaliacoesFilme)
-//router.get("/:id/minha-avaliacao", verifyToken, filmeController.getAvaliacaoUsuario)
+router.delete("/:id/nota", verifyToken, filmeController.removerAvaliacao)
+router.get("/:id/avaliacoes", filmeController.getAvaliacoesFilme)
+router.get("/:id/minha-avaliacao", verifyToken, filmeController.getAvaliacaoUsuario)
 
 export default router;

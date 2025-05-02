@@ -253,6 +253,44 @@ export const calcularMediaAvaliacoesFilme = async (idFilme: number) => {
   return somaNotas / avaliacoes.length
 }
 
+// Função para buscar filmes criados por um usuário específico
 
+export async function findPostsByUserIdService(userId: number) {
+  try {
+    const filmes = await prisma.filme.findMany({
+      where: {
+        usuarioCriador: userId,
+        status: true,
+      },
+      select: {
+        id: true,
+        nome: true,
+        diretor: true,
+        anoLancamento: true,
+        duracao: true,
+        produtora: true,
+        classificacao: true,
+        poster: true,
+        sinopse: true,
+        dataAtualizacao: true,
+        genero: {   // Mantém a relação completa do gênero
+          select: {
+            id: true,
+            descricao: true,
+          },
+        },
+      },
+      orderBy: {
+        dataAtualizacao: 'desc',
+      },
+    });
+
+    // Retorna os filmes com o objeto completo do gênero
+    return filmes;
+  } catch (error) {
+    console.error("Erro ao buscar filmes do usuário:", error);
+    throw error;
+  }
+}
 
 

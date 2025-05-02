@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
+  <!-- Estilos -->
+  <defs>
+    <filter id="shadow" x="-2" y="-2" width="105%" height="105%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Entidades -->
+  <!-- Filme -->
+  <rect x="350" y="100" width="200" height="230" rx="5" ry="5" fill="#f8d7da" stroke="#c82333" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="350" y="100" width="200" height="30" rx="5" ry="5" fill="#dc3545" stroke="#c82333" stroke-width="2"/>
+  <text x="450" y="122" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">Filme</text>
+  <line x1="350" y1="130" x2="550" y2="130" stroke="#c82333" stroke-width="1"/>
+  <text x="360" y="150" font-family="Arial" font-size="12" fill="#333">id (PK)</text>
+  <text x="360" y="170" font-family="Arial" font-size="12" fill="#333">nome</text>
+  <text x="360" y="190" font-family="Arial" font-size="12" fill="#333">diretor</text>
+  <text x="360" y="210" font-family="Arial" font-size="12" fill="#333">anoLancamento</text>
+  <text x="360" y="230" font-family="Arial" font-size="12" fill="#333">duracao</text>
+  <text x="360" y="250" font-family="Arial" font-size="12" fill="#333">produtora</text>
+  <text x="360" y="270" font-family="Arial" font-size="12" fill="#333">classificacao</text>
+  <text x="360" y="290" font-family="Arial" font-size="12" fill="#333">generoId (FK)</text>
+  <text x="360" y="310" font-family="Arial" font-size="12" fill="#333">usuarioCriador (FK)</text>
+  
+  <!-- Usuário -->
+  <rect x="650" y="250" width="200" height="220" rx="5" ry="5" fill="#d1ecf1" stroke="#17a2b8" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="650" y="250" width="200" height="30" rx="5" ry="5" fill="#17a2b8" stroke="#17a2b8" stroke-width="2"/>
+  <text x="750" y="272" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">Usuario</text>
+  <line x1="650" y1="280" x2="850" y2="280" stroke="#17a2b8" stroke-width="1"/>
+  <text x="660" y="300" font-family="Arial" font-size="12" fill="#333">id (PK)</text>
+  <text x="660" y="320" font-family="Arial" font-size="12" fill="#333">nome</text>
+  <text x="660" y="340" font-family="Arial" font-size="12" fill="#333">email (UNIQUE)</text>
+  <text x="660" y="360" font-family="Arial" font-size="12" fill="#333">senha</text>
+  <text x="660" y="380" font-family="Arial" font-size="12" fill="#333">status</text>
+  <text x="660" y="400" font-family="Arial" font-size="12" fill="#333">dataCriacao</text>
+  <text x="660" y="420" font-family="Arial" font-size="12" fill="#333">dataAtualizacao</text>
+  <text x="660" y="440" font-family="Arial" font-size="12" fill="#333">tipoUsuarioId (FK)</text>
+  
+  <!-- Gênero -->
+  <rect x="50" y="150" width="200" height="100" rx="5" ry="5" fill="#d4edda" stroke="#28a745" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="50" y="150" width="200" height="30" rx="5" ry="5" fill="#28a745" stroke="#28a745" stroke-width="2"/>
+  <text x="150" y="172" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">Genero</text>
+  <line x1="50" y1="180" x2="250" y2="180" stroke="#28a745" stroke-width="1"/>
+  <text x="60" y="200" font-family="Arial" font-size="12" fill="#333">id (PK)</text>
+  <text x="60" y="220" font-family="Arial" font-size="12" fill="#333">descricao</text>
+  <text x="60" y="240" font-family="Arial" font-size="12" fill="#333">status</text>
+  
+  <!-- Avaliação -->
+  <rect x="350" y="400" width="200" height="140" rx="5" ry="5" fill="#fff3cd" stroke="#ffc107" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="350" y="400" width="200" height="30" rx="5" ry="5" fill="#ffc107" stroke="#ffc107" stroke-width="2"/>
+  <text x="450" y="422" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">Avaliacao</text>
+  <line x1="350" y1="430" x2="550" y2="430" stroke="#ffc107" stroke-width="1"/>
+  <text x="360" y="450" font-family="Arial" font-size="12" fill="#333">id (PK)</text>
+  <text x="360" y="470" font-family="Arial" font-size="12" fill="#333">idUsuario (FK)</text>
+  <text x="360" y="490" font-family="Arial" font-size="12" fill="#333">idFilme (FK)</text>
+  <text x="360" y="510" font-family="Arial" font-size="12" fill="#333">nota</text>
+  <text x="360" y="530" font-family="Arial" font-size="12" fill="#333">comentario</text>
+  
+  <!-- Gênero Filme -->
+  <rect x="120" y="350" width="200" height="100" rx="5" ry="5" fill="#e2e3e5" stroke="#6c757d" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="120" y="350" width="200" height="30" rx="5" ry="5" fill="#6c757d" stroke="#6c757d" stroke-width="2"/>
+  <text x="220" y="372" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">Genero_Filme</text>
+  <line x1="120" y1="380" x2="320" y2="380" stroke="#6c757d" stroke-width="1"/>
+  <text x="130" y="400" font-family="Arial" font-size="12" fill="#333">idGenero (PK, FK)</text>
+  <text x="130" y="420" font-family="Arial" font-size="12" fill="#333">idFilme (PK, FK)</text>
+  
+  <!-- TipoUsuario -->
+  <rect x="650" y="550" width="200" height="80" rx="5" ry="5" fill="#cce5ff" stroke="#007bff" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="650" y="550" width="200" height="30" rx="5" ry="5" fill="#007bff" stroke="#007bff" stroke-width="2"/>
+  <text x="750" y="572" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">TipoUsuario</text>
+  <line x1="650" y1="580" x2="850" y2="580" stroke="#007bff" stroke-width="1"/>
+  <text x="660" y="600" font-family="Arial" font-size="12" fill="#333">id (PK)</text>
+  <text x="660" y="620" font-family="Arial" font-size="12" fill="#333">nome</text>
+  
+  <!-- Relacionamentos -->
+  <!-- Filme - Gênero -->
+  <line x1="250" y1="190" x2="350" y2="190" stroke="#28a745" stroke-width="2" stroke-dasharray="5,5"/>
+  <polygon points="345,185 350,190 345,195" fill="#28a745" stroke="#28a745" stroke-width="1"/>
+  <text x="300" y="180" font-family="Arial" font-size="12" fill="#333">1</text>
+  <text x="335" y="180" font-family="Arial" font-size="12" fill="#333">n</text>
+  
+  <!-- Filme - Usuario (criador) -->
+  <line x1="550" y1="310" x2="650" y2="310" stroke="#17a2b8" stroke-width="2" stroke-dasharray="5,5"/>
+  <polygon points="645,305 650,310 645,315" fill="#17a2b8" stroke="#17a2b8" stroke-width="1"/>
+  <text x="580" y="300" font-family="Arial" font-size="12" fill="#333">n</text>
+  <text x="630" y="300" font-family="Arial" font-size="12" fill="#333">1</text>
+  
+  <!-- Usuario - Avaliacao -->
+  <line x1="650" y1="350" x2="550" y2="450" stroke="#17a2b8" stroke-width="2"/>
+  <polygon points="550,445 550,450 545,450" fill="#17a2b8" stroke="#17a2b8" stroke-width="1"/>
+  <text x="610" y="380" font-family="Arial" font-size="12" fill="#333">1</text>
+  <text x="560" y="435" font-family="Arial" font-size="12" fill="#333">n</text>
+  
+  <!-- Filme - Avaliacao -->
+  <line x1="450" y1="330" x2="450" y2="400" stroke="#c82333" stroke-width="2"/>
+  <polygon points="445,395 450,400 455,395" fill="#c82333" stroke="#c82333" stroke-width="1"/>
+  <text x="440" y="350" font-family="Arial" font-size="12" fill="#333">1</text>
+  <text x="440" y="390" font-family="Arial" font-size="12" fill="#333">n</text>
+  
+  <!-- Usuario - TipoUsuario -->
+  <line x1="750" y1="470" x2="750" y2="550" stroke="#007bff" stroke-width="2"/>
+  <polygon points="745,545 750,550 755,545" fill="#007bff" stroke="#007bff" stroke-width="1"/>
+  <text x="760" y="510" font-family="Arial" font-size="12" fill="#333">n</text>
+  <text x="760" y="540" font-family="Arial" font-size="12" fill="#333">1</text>
+  
+  <!-- Filme - Genero_Filme -->
+  <line x1="350" y1="250" x2="320" y2="380" stroke="#c82333" stroke-width="2"/>
+  <polygon points="320,375 320,380 325,380" fill="#c82333" stroke="#c82333" stroke-width="1"/>
+  <text x="330" y="320" font-family="Arial" font-size="12" fill="#333">1</text>
+  <text x="330" y="370" font-family="Arial" font-size="12" fill="#333">n</text>
+  
+  <!-- Genero - Genero_Filme -->
+  <line x1="150" y1="250" x2="150" y2="350" stroke="#28a745" stroke-width="2"/>
+  <polygon points="145,345 150,350 155,345" fill="#28a745" stroke="#28a745" stroke-width="1"/>
+  <text x="160" y="300" font-family="Arial" font-size="12" fill="#333">1</text>
+  <text x="160" y="340" font-family="Arial" font-size="12" fill="#333">n</text>
+  
+  <!-- Título do Diagrama -->
+  <text x="450" y="50" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">Diagrama ER do Sistema de Filmes</text>
+</svg>

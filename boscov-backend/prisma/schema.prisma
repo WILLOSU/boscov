@@ -1,3 +1,5 @@
+
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -33,11 +35,14 @@ model filme {
   sinopse         String?
   dataAtualizacao DateTime?
   status          Boolean        @default(true)
+  usuarioCriador  Int?           // Novo campo para identificar quem criou o filme
   avaliacao       avaliacao[]
   genero          genero         @relation(fields: [generoId], references: [id], map: "Filme_generoId_fkey")
   genero_filme    genero_filme[]
+  usuario         usuario?       @relation(fields: [usuarioCriador], references: [id], map: "Filme_usuarioCriador_fkey") // Nova relação
 
   @@index([generoId], map: "Filme_generoId_fkey")
+  @@index([usuarioCriador], map: "Filme_usuarioCriador_fkey") // Novo índice
 }
 
 model genero {
@@ -78,6 +83,7 @@ model usuario {
   avatar          String?
   background      String?
   avaliacao       avaliacao[]
+  filmesCriados   filme[]     // Nova relação para os filmes criados por este usuário
   tipousuario     tipousuario @relation(fields: [tipoUsuarioId], references: [id], map: "Usuario_tipoUsuarioId_fkey")
 
   @@index([tipoUsuarioId], map: "Usuario_tipoUsuarioId_fkey")
