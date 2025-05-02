@@ -1,5 +1,7 @@
-import { useContext, useEffect, useState, useCallback } from "react";
-import { UserContext } from "../../Context/UserContext";
+"use client"
+
+import { useContext, useEffect, useState, useCallback } from "react"
+import { UserContext } from "../../Context/UserContext"
 import {
   ProfileActions,
   ProfileAvatar,
@@ -10,45 +12,49 @@ import {
   ProfileIconEdit,
   ProfileUser,
   ProfileFilmes,
-} from "./ProfileStyled";
-import { getAllPostsByUser } from "../../services/filmesServices";
-import { Card } from "../../components/Card/Card";
-import { Filme } from "../../Datas";
-import { Link } from "react-router-dom";
+} from "./ProfileStyled"
+import { getAllPostsByUser } from "../../services/filmesServices"
+import { Card } from "../../components/Card/Card"
+import type { Filme } from "../../Datas"
+import { Link } from "react-router-dom"
+import { validateFilmeData } from "../../utils/data-validator" // Importe a função de validação
 
 export function Profile() {
-  const { user } = useContext(UserContext);
-  const [posts, setPosts] = useState<Filme[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { user } = useContext(UserContext)
+  const [posts, setPosts] = useState<Filme[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
   const findAllPostsByUser = useCallback(async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
 
       // Verificar se o usuário existe e tem um ID
       if (!user || !user.id) {
-        setError("Usuário não encontrado ou sem ID válido");
-        setIsLoading(false);
-        return;
+        setError("Usuário não encontrado ou sem ID válido")
+        setIsLoading(false)
+        return
       }
 
-      const filmes = await getAllPostsByUser(user.id);
+      const filmesData = await getAllPostsByUser(user.id)
 
-      setPosts(filmes);
-      setError(null);
+      // Valida e normaliza cada filme antes de atualizar o estado
+      const validatedFilmes = Array.isArray(filmesData) ? filmesData.map((filme) => validateFilmeData(filme)) : []
+
+      setPosts(validatedFilmes)
+      setError(null)
     } catch (err) {
-      console.error("Erro ao buscar posts do usuário:", err);
-      setError("Falha ao carregar os posts do usuário");
-      setPosts([]);
+      console.error("Erro ao buscar posts do usuário:", err)
+      setError("Falha ao carregar os posts do usuário")
+      setPosts([])
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, [user]); // Dependência do useCallback
+  }, [user]) // Dependência do useCallback
 
   useEffect(() => {
-    findAllPostsByUser();
-  }, [findAllPostsByUser]); // Dependência do useEffect
+    findAllPostsByUser()
+  }, [findAllPostsByUser]) // Dependência do useEffect
 
   return (
     <ProfileContainer>
@@ -56,16 +62,10 @@ export function Profile() {
         <ProfileIconEdit>
           <i className="bi bi-pencil-square"></i>
         </ProfileIconEdit>
-        <ProfileBackground
-          src="https://i.imgur.com/8o4IBRg.png"
-          alt="Background do perfil"
-        />
+        <ProfileBackground src="https://i.imgur.com/8o4IBRg.png" alt="Background do perfil" />
         {user && (
           <ProfileUser>
-            <ProfileAvatar
-              src="https://i.imgur.com/xmI2QAo.jpg"
-              alt="Foto do usuário"
-            />
+            <ProfileAvatar src="https://i.imgur.com/xmI2QAo.jpg" alt="Foto do usuário" />
             <h2>{user.nome}</h2>
             <h3>{user.email}</h3>
           </ProfileUser>
@@ -83,17 +83,15 @@ export function Profile() {
         {isLoading ? (
           <p>Carregando Filmes...</p>
         ) : error ? (
-          <p>
-            {typeof error === "object" ? "Erro ao carregar os dados" : error}
-          </p>
+          <p>{error}</p>
         ) : posts.length === 0 ? (
           <p>Nenhum Filme encontrado</p>
         ) : (
-          posts.map((filme) => <Card key={filme.id} filme={filme} />)
+          posts.map((filme) => <Card key={filme.id || Math.random()} filme={filme} />)
         )}
       </ProfileFilmes>
     </ProfileContainer>
-  );
+  )
 }
 
-export default Profile;
+export default Profile

@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 interface CardBodyProps {
-  top?: boolean;
+  $top?: boolean
 }
 
 export const CardContainer = styled.section`
@@ -21,7 +21,7 @@ export const CardContainer = styled.section`
     transform: translateY(-5px);
   }
   
-`;
+`
 
 export const CardBody = styled.article<CardBodyProps>`
   display: flex;
@@ -31,16 +31,16 @@ export const CardBody = styled.article<CardBodyProps>`
   padding: 16px; /* Adiciona espaço interno */
   gap: 1rem;
 
-  font-size: ${props => props.top ? "1.5rem" : ".9rem"};
+  font-size: ${(props) => (props.$top ? "1.5rem" : ".9rem")};
 
   h2 {
     margin-bottom: 1rem;
-    font-size: ${props => props.top ? "3rem" : "1.5rem"}; // usei templantes string
+    font-size: ${(props) => (props.$top ? "3rem" : "1.5rem")}; // usei templantes string
   }
 
   img {
-    width: ${(props) => (props.top ? "164px" : "120px")};
-    height: ${(props) => (props.top ? "236px" : "180px")};
+    width: ${(props) => (props.$top ? "164px" : "120px")};
+    height: ${(props) => (props.$top ? "236px" : "180px")};
 
     flex-shrink: 0;
     overflow: hidden;
@@ -54,7 +54,7 @@ export const CardBody = styled.article<CardBodyProps>`
   img:hover {
     transform: scale(1.05);
   }
-`;
+`
 
 export const CardFooter = styled.article`
   display: flex;
@@ -88,7 +88,7 @@ export const CardFooter = styled.article`
     }
   }
   
-`;
+`
 // abaixo do poster
 export const CardRight = styled.div`
   display: flex;
@@ -100,6 +100,4 @@ export const CardRight = styled.div`
     font-size: 14px;
     text-align: left;
   }
-`;
-
-
+`
