@@ -67,9 +67,16 @@ export const getFilmeById = async (id: number) => {
   }) // busca no bd usar await
 }
 
+
+
 export const createFilme = async (data: any) => {
-  return await prisma.filme.create({ data })
-}
+  return await prisma.filme.create({
+      data: {
+          ...data,
+      }
+  });
+};
+
 
 
 export const updateFilme = async (id: number, data: any) => {

@@ -127,15 +127,31 @@ export class FilmeController {
   }
 
   // Criar um novo filme
+
   async createFilmes(req: Request, res: Response): Promise<void> {
     try {
-      const data = req.body;
+      const data = {
+        ...req.body,
+        anoLancamento: Number(req.body.anoLancamento),
+        duracao: Number(req.body.duracao),
+        generoId: Number(req.body.generoId),
+        status: req.body.status,
+        usuarioCriador: Number(req.body.usuarioCriador),
+      };
+      console.log("Dados convertidos no controller:", data); // Adicione este log
       const filme = await createFilme(data);
-
       res.status(201).json(filme);
     } catch (error) {
       console.error("Erro ao criar filme:", error);
-      res.status(500).json({ error: "Erro ao criar filme" });
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json({ error: "Erro interno do servidor", details: error.message });
+      } else {
+        res
+          .status(500)
+          .json({ error: "Erro interno do servidor", details: String(error) });
+      }
     }
   }
 
@@ -405,27 +421,29 @@ export class FilmeController {
 
   // Método para buscar filmes criados pelo usuário autenticado
 
-async findPostsByUserId(req: Request, res: Response): Promise<void> {
-  try {
-    const userId = Number(req.params.id);
+  async findPostsByUserId(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = Number(req.params.id);
 
-    // Validação básica
-    if (isNaN(userId) || userId <= 0) {
-      res.status(400).json({ message: "ID de usuário inválido" });
-      return;
+      // Validação básica
+      if (isNaN(userId) || userId <= 0) {
+        res.status(400).json({ message: "ID de usuário inválido" });
+        return;
+      }
+
+      const posts = await findPostsByUserIdService(userId);
+
+      if (!posts || posts.length === 0) {
+        res
+          .status(404)
+          .json({ message: "Nenhum post encontrado para este usuário." });
+        return;
+      }
+
+      res.status(200).json(posts);
+    } catch (error) {
+      console.error("Erro ao buscar posts por usuário:", error);
+      res.status(500).json({ message: "Erro interno ao buscar posts." });
     }
-
-    const posts = await findPostsByUserIdService(userId);
-
-    if (!posts || posts.length === 0) {
-      res.status(404).json({ message: "Nenhum post encontrado para este usuário." });
-      return;
-    }
-
-    res.status(200).json(posts);
-  } catch (error) {
-    console.error("Erro ao buscar posts por usuário:", error);
-    res.status(500).json({ message: "Erro interno ao buscar posts." });
   }
-}
 }
