@@ -1,18 +1,16 @@
-// src/components/Interface/Types.ts
-
-import { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
-import { UseFormRegister, FieldValues } from "react-hook-form";
+import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react"
+import type { UseFormRegister, FieldValues } from "react-hook-form"
 
 // Interface para componentes de Input/Textarea
 export type InputProps<T extends FieldValues> = {
-    type?: string;
-    placeholder?: string;
-    name: keyof T & string;
-    register: UseFormRegister<T>;
-    isInput?: boolean;
-    value?: string | number;
+  type?: string
+  placeholder?: string
+  name: keyof T & string
+  register: UseFormRegister<T>
+  isInput?: boolean
+  value?: string | number
 } & InputHTMLAttributes<HTMLInputElement> &
-    TextareaHTMLAttributes<HTMLTextAreaElement>;
+  TextareaHTMLAttributes<HTMLTextAreaElement>
 
 // Tipos para o formulário (antes da transformação do Zod)
 export interface FilmeFormValues {
@@ -26,7 +24,7 @@ export interface FilmeFormValues {
   classificacao: string // String no formulário
   generoId: string // String no formulário
   status: string // String no formulário
-  usuarioCriador: number
+  usuarioCriador?: string
   generoDescricao?: string
 }
 
@@ -36,12 +34,12 @@ export interface FilmesData {
   poster: string
   sinopse: string
   diretor: string
-  anoLancamento: number // Número para a API
-  duracao: number // Número para a API
+  anoLancamento: number
+  duracao: number
   produtora: string
-  classificacao: number // Número para a API
-  generoId: number // Número para a API
-  status: number // Número para a API
-  usuarioCriador: number
+  classificacao: string // Alterado para string conforme esperado pelo backend
+  generoId: number
+  status: boolean // Alterado para boolean conforme esperado pelo backend
+  usuarioCriador?: number
   generoDescricao?: string
 }

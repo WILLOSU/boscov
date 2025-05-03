@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const filmesSchema = z.object({
   nome: z
@@ -10,6 +10,7 @@ export const filmesSchema = z.object({
   poster: z
     .string()
     .nonempty({ message: "O link do banner não pode ser vazio" })
+    .url({ message: "O poster deve ser uma URL válida" }) // Adicionada validação de URL
     .refine((value) => !/^\s*$/.test(value), {
       message: "O link do poster não pode ter apenas espaços",
     }),
@@ -25,7 +26,9 @@ export const filmesSchema = z.object({
     .refine((value) => !/^\s*$/.test(value), {
       message: "O nome do diretor não pode ter apenas espaços",
     }),
-  anoLancamento: z.string().nonempty({ message: "O ano de lançamento não pode ser vazio" }),
+  anoLancamento: z
+    .string()
+    .nonempty({ message: "O ano de lançamento não pode ser vazio" }),
   duracao: z.string().nonempty({ message: "A duração não pode ser vazia" }),
   produtora: z
     .string()
@@ -33,12 +36,14 @@ export const filmesSchema = z.object({
     .refine((value) => !/^\s*$/.test(value), {
       message: "O nome da produtora não pode ter apenas espaços",
     }),
-  classificacao: z.string().nonempty({ message: "A classificação indicativa não pode ser vazia" }),
-  generoId: z.string().nonempty({ message: "O ID do gênero não pode ser vazio" }),
+  classificacao: z
+    .string()
+    .nonempty({ message: "A classificação indicativa não pode ser vazia" }),
+  generoId: z
+    .string()
+    .nonempty({ message: "O ID do gênero não pode ser vazio" }),
   status: z.string().nonempty({ message: "O status não pode ser vazio" }),
-  usuarioCriador: z.number({ invalid_type_error: "O ID do usuário criador deve ser um número" }),
+  // Adicionando campos opcionais
+  usuarioCriador: z.string().optional(),
   generoDescricao: z.string().optional(),
-})
-
-// Inferindo o tipo dos dados VALIDADOS pelo Zod schema
-export type FilmeFormValues = z.infer<typeof filmesSchema>
+});
