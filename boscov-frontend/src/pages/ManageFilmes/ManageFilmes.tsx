@@ -37,8 +37,8 @@ export function ManageFilmes() {
   } = useForm<FilmeFormValues>({
     resolver: zodResolver(filmesSchema),
     defaultValues: {
-      usuarioCriador: user?.id ? String(user.id) : "2", // Convertendo para string
-      status: "1", // Ativo por padrão
+      usuarioCriador: user?.id ? String(user.id) : "2",
+      status: "1",
     },
   });
 
@@ -59,14 +59,12 @@ export function ManageFilmes() {
           setValue("produtora", filme.produtora);
           setValue("classificacao", String(filme.classificacao));
           setValue("generoId", String(filme.generoId));
-          setValue("status", String(filme.status));
+          setValue("status", filme.status ? "1" : "0"); // Converte booleano para string "1" ou "0"
 
-          // Se o filme tiver generoDescricao, define o valor
           if (filme.generoDescricao) {
             setValue("generoDescricao", filme.generoDescricao);
           }
 
-          // Define o usuarioCriador se estiver presente no filme
           if (filme.usuarioCriador) {
             setValue("usuarioCriador", String(filme.usuarioCriador));
           }
@@ -79,7 +77,6 @@ export function ManageFilmes() {
           setLoading(false);
         }
       } else if (action === "add") {
-        // Reset do formulário para valores padrão ao adicionar novo filme
         reset({
           nome: "",
           poster: "",
@@ -90,8 +87,8 @@ export function ManageFilmes() {
           produtora: "",
           classificacao: "",
           generoId: "",
-          status: "1", // Ativo por padrão
-          usuarioCriador: user?.id ? String(user.id) : "2", // Convertendo para string
+          status: "1",
+          usuarioCriador: user?.id ? String(user.id) : "2",
         });
         setErrorMessage(null);
         setSuccessMessage(null);
@@ -101,20 +98,18 @@ export function ManageFilmes() {
     fetchFilmeData();
   }, [action, id, setValue, reset, user]);
 
-  // Função para converter FilmeFormValues para FilmesData
   function convertToFilmesData(data: FilmeFormValues): FilmesData {
-    // Converte explicitamente cada campo para garantir o tipo correto
     return {
       nome: data.nome,
-      poster: data.poster, // Deve ser uma URL válida
+      poster: data.poster,
       sinopse: data.sinopse,
       diretor: data.diretor,
       anoLancamento: Number(data.anoLancamento),
       duracao: Number(data.duracao),
       produtora: data.produtora,
-      classificacao: data.classificacao, // Mantém como string
+      classificacao: data.classificacao,
       generoId: Number(data.generoId),
-      status: data.status === "1", // Converte para boolean (1 = true, 0 = false)
+      status: data.status === "1" || data.status === "true" ? true : false,
       usuarioCriador:
         user?.id ||
         (data.usuarioCriador ? Number(data.usuarioCriador) : undefined),
@@ -122,7 +117,6 @@ export function ManageFilmes() {
     };
   }
 
-  // Tipagem correta para os handlers de submit
   const registerFilmesSubmit = async (data: FilmeFormValues) => {
     try {
       setLoading(true);
@@ -135,7 +129,6 @@ export function ManageFilmes() {
       await createFilmes(filmeDataToSend);
       setSuccessMessage("Filme cadastrado com sucesso!");
 
-      // Aguarda um breve momento para mostrar a mensagem de sucesso antes de navegar
       setTimeout(() => {
         navigate("/profile");
       }, 1500);
@@ -145,7 +138,6 @@ export function ManageFilmes() {
         "Erro ao cadastrar filme. Verifique os dados e tente novamente."
       );
 
-      // Log detalhado para depuração
       if (error instanceof Error) {
         console.error("Detalhes do erro:", error.message);
       }
@@ -168,7 +160,6 @@ export function ManageFilmes() {
       await updateFilme(id, filmeDataToSend);
       setSuccessMessage("Filme atualizado com sucesso!");
 
-      // Aguarda um breve momento para mostrar a mensagem de sucesso antes de navegar
       setTimeout(() => {
         navigate("/profile");
       }, 1500);
@@ -178,7 +169,6 @@ export function ManageFilmes() {
         "Erro ao atualizar filme. Verifique os dados e tente novamente."
       );
 
-      // Log detalhado para depuração
       if (error instanceof Error) {
         console.error("Detalhes do erro:", error.message);
       }
@@ -191,7 +181,6 @@ export function ManageFilmes() {
     <AddFilmesContainer>
       <h2>{action === "add" ? "Adicionar" : "Atualizar"} Filme</h2>
 
-      {/* Mensagens de erro e sucesso */}
       {errorMessage && (
         <div
           className="error-message"
@@ -313,6 +302,8 @@ export function ManageFilmes() {
             placeholder="Status (1 = Ativo, 0 = Inativo)"
             name="status"
             register={registerFilmes}
+            min={0}
+            max={1}
           />
           {errosRegisterFilmes.status && (
             <ErrorSpan>{errosRegisterFilmes.status.message}</ErrorSpan>
@@ -324,11 +315,10 @@ export function ManageFilmes() {
               placeholder="Gênero (Descrição)"
               name="generoDescricao"
               register={registerFilmes}
-              disabled
+              
             />
           )}
 
-          {/* Campo oculto para usuarioCriador */}
           <input type="hidden" {...registerFilmes("usuarioCriador")} />
 
           <Button type="submit" disabled={loading}>

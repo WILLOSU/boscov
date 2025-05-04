@@ -29,7 +29,10 @@ export const CardBody = styled.article<CardBodyProps>`
   justify-content: center;
   justify-content: space-between;
   padding: 16px; /* Adiciona espaço interno */
+  padding-top: 40px;
+  padding-right: 40px;
   gap: 1rem;
+  position: relative
 
   font-size: ${(props) => (props.$top ? "1.5rem" : ".9rem")};
 
@@ -100,4 +103,11 @@ export const CardRight = styled.div`
     font-size: 14px;
     text-align: left;
   }
-`
+`;
+
+export const EditIcon = styled.i`
+  font-size: 1.5rem;
+  color: #005954;
+  cursor: pointer;
+  
+`;

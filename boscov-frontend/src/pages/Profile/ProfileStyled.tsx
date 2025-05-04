@@ -102,3 +102,17 @@ h3 {
   margin-top: 1rem;
 }
 `;
+
+export const FilmeItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Espaçamento entre o card e o ícone */
+  margin-bottom: 20px; /* Espaçamento entre os itens de filme */
+
+  i.bi-pencil-square {
+    font-size: 1.5rem;
+    color: #005954; /* Cor do ícone de edição */
+    cursor: pointer;
+  }
+ 
+`;
