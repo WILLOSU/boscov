@@ -79,10 +79,39 @@ export const createFilme = async (data: any) => {
 
 
 
+import { prisma } from "../database/prismaClient";
+
 export const updateFilme = async (id: number, data: any) => {
+  const updateData: any = {
+    nome: data.nome,
+    poster: data.poster,
+    sinopse: data.sinopse,
+    diretor: data.diretor,
+    anoLancamento: Number(data.anoLancamento),
+    duracao: Number(data.duracao),
+    produtora: data.produtora,
+    classificacao: data.classificacao,
+    status: data.status,
+    genero: {
+      connect: {
+        id: Number(data.generoId),
+      },
+    },
+    dataAtualizacao: new Date(),
+  };
+
+  // Adiciona a conexão com o usuário criador se o usuarioCriador estiver presente
+  if (data.usuarioCriador) {
+    updateData.usuario = {
+      connect: {
+        id: Number(data.usuarioCriador),
+      },
+    };
+  }
+
   return await prisma.filme.update({
     where: { id },
-    data,
+    data: updateData,
   });
 };
 
