@@ -5,7 +5,8 @@ import { AddFilmesContainer } from "./ManageFilmesStyled";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   FilmeFormValues,
-  FilmesData,
+  Genero,
+  FilmeDataFromBackend,
 } from "../../components/Interface/Types";
 import { useForm } from "react-hook-form";
 import { Input } from "../../components/Input/Input";
@@ -27,6 +28,8 @@ export function ManageFilmes() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const { user } = useContext(UserContext);
+  const [allGeneros, setAllGeneros] = useState<Genero[]>([]);
+  const [selectedGeneros, setSelectedGeneros] = useState<number[]>([]);
 
   const {
     register: registerFilmes,
@@ -34,13 +37,48 @@ export function ManageFilmes() {
     formState: { errors: errosRegisterFilmes },
     setValue,
     reset,
-  } = useForm<FilmeFormValues>({
+  } = useForm<{
+    status: string;
+    nome: string;
+    poster: string;
+    sinopse: string;
+    diretor: string;
+    anoLancamento: string;
+    duracao: string;
+    produtora: string;
+    classificacao: string;
+    usuarioCriador?: string | undefined;
+    generos?: number[] | null | undefined; // <--- DEVE SER OPCIONAL AQUI
+    generoDescricao?: string | undefined;
+  }>({
     resolver: zodResolver(filmesSchema),
     defaultValues: {
       usuarioCriador: user?.id ? String(user.id) : "2",
       status: "1",
+      generos: [], // Inicializa como array vazio
     },
   });
+
+  useEffect(() => {
+    async function fetchAllGeneros() {
+      console.log("Fazendo requisição para:", "/generos");
+      try {
+        const response = await fetch("/generos"); // Use a sua rota para listar gêneros
+        if (response.ok) {
+          const data: Genero[] = await response.json();
+          setAllGeneros(data);
+        } else {
+          console.error("Erro ao buscar gêneros:", response.status);
+          setErrorMessage("Erro ao carregar a lista de gêneros.");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar gêneros:", error);
+        setErrorMessage("Erro ao carregar a lista de gêneros.");
+      }
+    }
+
+    fetchAllGeneros();
+  }, []);
 
   useEffect(() => {
     async function fetchFilmeData() {
@@ -48,25 +86,25 @@ export function ManageFilmes() {
         try {
           setLoading(true);
           setErrorMessage(null);
-          const filme = await getFilmesById(id);
+          const filme: FilmeDataFromBackend = await getFilmesById(id);
 
           setValue("nome", filme.nome);
-          setValue("poster", filme.poster);
-          setValue("sinopse", filme.sinopse);
+          setValue("poster", filme.poster ?? ""); // Adicionado fallback para string vazia
+          setValue("sinopse", filme.sinopse ?? ""); // Adicionado fallback para string vazia
           setValue("diretor", filme.diretor);
           setValue("anoLancamento", String(filme.anoLancamento));
           setValue("duracao", String(filme.duracao));
           setValue("produtora", filme.produtora);
           setValue("classificacao", String(filme.classificacao));
-          setValue("generoId", String(filme.generoId));
-          setValue("status", filme.status ? "1" : "0"); // Converte booleano para string "1" ou "0"
-
-          if (filme.generoDescricao) {
-            setValue("generoDescricao", filme.generoDescricao);
-          }
+          setValue("status", filme.status ? "1" : "0");
 
           if (filme.usuarioCriador) {
             setValue("usuarioCriador", String(filme.usuarioCriador));
+          }
+
+          if (filme?.genero_filme) {
+            const generoIds = filme.genero_filme.map((gf) => gf.idGenero);
+            setSelectedGeneros(generoIds);
           }
         } catch (error) {
           console.error("Erro ao buscar dados do filme:", error);
@@ -86,10 +124,11 @@ export function ManageFilmes() {
           duracao: "",
           produtora: "",
           classificacao: "",
-          generoId: "",
+          generos: [],
           status: "1",
           usuarioCriador: user?.id ? String(user.id) : "2",
         });
+        setSelectedGeneros([]);
         setErrorMessage(null);
         setSuccessMessage(null);
       }
@@ -98,7 +137,7 @@ export function ManageFilmes() {
     fetchFilmeData();
   }, [action, id, setValue, reset, user]);
 
-  function convertToFilmesData(data: FilmeFormValues): FilmesData {
+  function convertToFilmesData(data: FilmeFormValues) {
     return {
       nome: data.nome,
       poster: data.poster,
@@ -108,12 +147,11 @@ export function ManageFilmes() {
       duracao: Number(data.duracao),
       produtora: data.produtora,
       classificacao: data.classificacao,
-      generoId: Number(data.generoId),
-      status: data.status === "1" || data.status === "true" ? true : false,
+      status: data.status === "1" || data.status === "true",
       usuarioCriador:
         user?.id ||
         (data.usuarioCriador ? Number(data.usuarioCriador) : undefined),
-      generoDescricao: data.generoDescricao,
+      generos: data.generos ?? [], // <--- GARANTE QUE SEJA UM ARRAY (OU ARRAY VAZIO)
     };
   }
 
@@ -287,14 +325,37 @@ export function ManageFilmes() {
             <ErrorSpan>{errosRegisterFilmes.classificacao.message}</ErrorSpan>
           )}
 
-          <Input
-            type="number"
-            placeholder="ID do Gênero"
-            name="generoId"
-            register={registerFilmes}
-          />
-          {errosRegisterFilmes.generoId && (
-            <ErrorSpan>{errosRegisterFilmes.generoId.message}</ErrorSpan>
+          <label htmlFor="generos">Gêneros:</label>
+          <select
+            multiple
+            name="generos"
+            value={selectedGeneros.map(String)} // <--- CONVERSÃO PARA STRING
+            onChange={(e) => {
+              const options = e.target.selectedOptions;
+              const values = Array.from(options).map((option) =>
+                Number(option.value)
+              );
+              setSelectedGeneros(values);
+            }}
+            style={{
+              display: "block",
+              width: "100%",
+              padding: "10px",
+              marginBottom: "15px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              boxSizing: "border-box",
+              height: "100px",
+            }}
+          >
+            {allGeneros.map((genero) => (
+              <option key={genero.id} value={genero.id}>
+                {genero.descricao}
+              </option>
+            ))}
+          </select>
+          {errosRegisterFilmes.generos && (
+            <ErrorSpan>{errosRegisterFilmes.generos.message}</ErrorSpan>
           )}
 
           <Input
@@ -307,16 +368,6 @@ export function ManageFilmes() {
           />
           {errosRegisterFilmes.status && (
             <ErrorSpan>{errosRegisterFilmes.status.message}</ErrorSpan>
-          )}
-
-          {action === "edit" && (
-            <Input
-              type="text"
-              placeholder="Gênero (Descrição)"
-              name="generoDescricao"
-              register={registerFilmes}
-              
-            />
           )}
 
           <input type="hidden" {...registerFilmes("usuarioCriador")} />

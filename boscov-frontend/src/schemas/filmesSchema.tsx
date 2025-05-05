@@ -10,7 +10,7 @@ export const filmesSchema = z.object({
   poster: z
     .string()
     .nonempty({ message: "O link do banner não pode ser vazio" })
-    .url({ message: "O poster deve ser uma URL válida" }) // Adicionada validação de URL
+    .url({ message: "O poster deve ser uma URL válida" })
     .refine((value) => !/^\s*$/.test(value), {
       message: "O link do poster não pode ter apenas espaços",
     }),
@@ -39,11 +39,8 @@ export const filmesSchema = z.object({
   classificacao: z
     .string()
     .nonempty({ message: "A classificação indicativa não pode ser vazia" }),
-  generoId: z
-    .string()
-    .nonempty({ message: "O ID do gênero não pode ser vazio" }),
+  generos: z.array(z.number()).optional().nullable(),
   status: z.string().nonempty({ message: "O status não pode ser vazio" }),
-  // Adicionando campos opcionais
   usuarioCriador: z.string().optional(),
   generoDescricao: z.string().optional(),
 });
