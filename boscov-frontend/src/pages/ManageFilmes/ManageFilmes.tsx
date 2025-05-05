@@ -20,6 +20,7 @@ import {
 import { useEffect, useState, useContext } from "react";
 import { filmesSchema } from "../../schemas/filmesSchema";
 import { UserContext } from "../../Context/UserContext";
+import { MultiSelectCheckbox } from "../../components/MultiSelect/MultiSelectCheckbox";
 
 export function ManageFilmes() {
   const { action, id } = useParams();
@@ -161,7 +162,10 @@ export function ManageFilmes() {
       setErrorMessage(null);
       setSuccessMessage(null);
 
-      const filmeDataToSend = convertToFilmesData(data);
+      const filmeDataToSend = convertToFilmesData({
+        ...data,
+        generos: selectedGeneros,
+      }); // Envia selectedGeneros
       console.log("Enviando dados para criação:", filmeDataToSend);
 
       await createFilmes(filmeDataToSend);
@@ -192,7 +196,10 @@ export function ManageFilmes() {
       setErrorMessage(null);
       setSuccessMessage(null);
 
-      const filmeDataToSend = convertToFilmesData(data);
+      const filmeDataToSend = convertToFilmesData({
+        ...data,
+        generos: selectedGeneros,
+      }); // Envia selectedGeneros
       console.log("Enviando dados para atualização:", filmeDataToSend);
 
       await updateFilme(id, filmeDataToSend);
@@ -325,38 +332,13 @@ export function ManageFilmes() {
             <ErrorSpan>{errosRegisterFilmes.classificacao.message}</ErrorSpan>
           )}
 
-          <label htmlFor="generos">Gêneros:</label>
-          <select
-            multiple
-            name="generos"
-            value={selectedGeneros.map(String)} // <--- CONVERSÃO PARA STRING
-            onChange={(e) => {
-              const options = e.target.selectedOptions;
-              const values = Array.from(options).map((option) =>
-                Number(option.value)
-              );
-              setSelectedGeneros(values);
-            }}
-            style={{
-              display: "block",
-              width: "100%",
-              padding: "10px",
-              marginBottom: "15px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              boxSizing: "border-box",
-              height: "100px",
-            }}
-          >
-            {allGeneros.map((genero) => (
-              <option key={genero.id} value={genero.id}>
-                {genero.descricao}
-              </option>
-            ))}
-          </select>
-          {errosRegisterFilmes.generos && (
-            <ErrorSpan>{errosRegisterFilmes.generos.message}</ErrorSpan>
-          )}
+          <MultiSelectCheckbox
+            label="Gêneros"
+            options={allGeneros}
+            value={selectedGeneros}
+            onChange={setSelectedGeneros}
+            errorMessage={errosRegisterFilmes.generos?.message}
+          />
 
           <Input
             type="number"
