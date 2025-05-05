@@ -50,7 +50,11 @@ export const getFilmeById = async (id: number) => {
   return await prisma.filme.findUnique({
     where: { id },
     include: {
-      genero: true,
+      genero_filme: {
+        include: {
+          genero: true, // Inclui os dados do gênero associado
+        },
+      },
       avaliacao: {
         include: {
           usuario: {
@@ -64,56 +68,81 @@ export const getFilmeById = async (id: number) => {
         },
       },
     },
-  }) // busca no bd usar await
-}
+  });
+};
 
+export const getAllGeneros = async () => {
+  return await prisma.genero.findMany();
+};
 
 
 export const createFilme = async (data: any) => {
-  return await prisma.filme.create({
-      data: {
-          ...data,
-      }
-  });
-};
+  const { generos: generoIds, ...filmeData } = data; // Espera um array 'generos' com os IDs
 
-
-
-import { prisma } from "../database/prismaClient";
-
-export const updateFilme = async (id: number, data: any) => {
-  const updateData: any = {
-    nome: data.nome,
-    poster: data.poster,
-    sinopse: data.sinopse,
-    diretor: data.diretor,
-    anoLancamento: Number(data.anoLancamento),
-    duracao: Number(data.duracao),
-    produtora: data.produtora,
-    classificacao: data.classificacao,
-    status: data.status,
-    genero: {
-      connect: {
-        id: Number(data.generoId),
-      },
+  const filme = await prisma.filme.create({
+    data: {
+      ...filmeData,
+      anoLancamento: Number(filmeData.anoLancamento),
+      duracao: Number(filmeData.duracao),
+      usuarioCriador: Number(filmeData.usuarioCriador),
     },
-    dataAtualizacao: new Date(),
-  };
+  });
 
-  // Adiciona a conexão com o usuário criador se o usuarioCriador estiver presente
-  if (data.usuarioCriador) {
-    updateData.usuario = {
-      connect: {
-        id: Number(data.usuarioCriador),
-      },
-    };
+  if (generoIds && Array.isArray(generoIds)) {
+    await Promise.all(
+      generoIds.map((idGenero: number) =>
+        prisma.genero_filme.create({
+          data: {
+            idFilme: filme.id,
+            idGenero,
+          },
+        })
+      )
+    );
   }
 
-  return await prisma.filme.update({
-    where: { id },
-    data: updateData,
-  });
+  return filme;
 };
+
+
+
+
+export const updateFilme = async (id: number, data: any) => {
+  const { generos: generoIds, ...filmeData } = data;
+
+  const filmeAtualizado = await prisma.filme.update({
+    where: { id },
+    data: {
+      ...filmeData,
+      anoLancamento: Number(filmeData.anoLancamento),
+      duracao: Number(filmeData.duracao),
+      usuarioCriador: Number(filmeData.usuarioCriador),
+      dataAtualizacao: new Date(),
+    },
+  });
+
+  // Atualiza os gêneros (remover os existentes e adicionar os novos)
+  await prisma.genero_filme.deleteMany({
+    where: { idFilme: id },
+  });
+
+  if (generoIds && Array.isArray(generoIds)) {
+    await Promise.all(
+      generoIds.map((idGenero: number) =>
+        prisma.genero_filme.create({
+          data: {
+            idFilme: id,
+            idGenero,
+          },
+        })
+      )
+    );
+  }
+
+  return filmeAtualizado;
+};
+
+  
 
 export const deleteFilme = async (id: number) => {
   return await prisma.filme.update({

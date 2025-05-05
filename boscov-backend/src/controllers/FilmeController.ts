@@ -19,9 +19,13 @@ import {
   calcularMediaAvaliacoesFilme,
   converterNotaParaEstrelasQuartos,
   findPostsByUserIdService,
+  getAllGeneros,
 } from "../services/FilmeService";
 
 export class FilmeController {
+  static listAllGeneros(arg0: string, listAllGeneros: any) {
+      throw new Error('Method not implemented.');
+  }
   // Buscar todos os filmes com paginação
   async getAll(req: Request, res: Response): Promise<void> {
     try {
@@ -444,6 +448,18 @@ export class FilmeController {
     } catch (error) {
       console.error("Erro ao buscar posts por usuário:", error);
       res.status(500).json({ message: "Erro interno ao buscar posts." });
+    }
+  }
+
+  // Listar todos os gêneros
+  async listAllGeneros(req: Request, res: Response): Promise<void> {
+    try {
+      // Aqui você chamará o serviço para buscar todos os gêneros
+      const generos = await getAllGeneros(); // Assumindo que este método exista no seu FilmeService
+      res.status(200).json(generos);
+    } catch (error) {
+      console.error("Erro ao buscar gêneros:", error);
+      res.status(500).json({ error: "Erro ao buscar gêneros" });
     }
   }
 }
