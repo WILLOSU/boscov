@@ -103,9 +103,6 @@ export async function getAllPostsByUser(userId: number): Promise<Filme[]> {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      params: {
-        include: 'genero_filme.genero', // Adicione este parâmetro para incluir os gêneros
-      },
     });
 
     return response.data;

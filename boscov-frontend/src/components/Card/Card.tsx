@@ -31,6 +31,7 @@ const safeRender = (value: unknown): string => {
 
 export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
   console.log("Dados do filme no Card:", filme); // Console para ver o objeto filme completo
+  
 
   if (filme?.genero_filme) {
     console.log("filme.genero_filme:", filme.genero_filme); // Console para ver a propriedade genero_filme
@@ -67,7 +68,7 @@ export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
               <br />
               <p>Gênero (s):</p>
               {filme?.genero_filme && filme.genero_filme.length > 0 ? (
-                <div style={{ marginLeft: '10px' }}> {/* Adiciona um pequeno recuo */}
+                <div style={{ marginLeft: '1px' }}> {/* Adiciona um pequeno recuo */}
                   {filme.genero_filme.map((gf) => (
                     <p key={gf.genero.id} style={{ marginBottom: '5px' }}>
                       {safeRender(gf.genero.descricao)}

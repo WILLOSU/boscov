@@ -41,7 +41,7 @@ export interface FilmesData {
   generos: number[]; // Array de IDs de gênero para a API
   status: boolean;
   usuarioCriador?: number;
-  generoDescricao?: string;
+  genero_filme?: { genero: { id?: number; descricao: string } }[];
 }
 
 // Interface para o objeto de gênero retornado do backend
