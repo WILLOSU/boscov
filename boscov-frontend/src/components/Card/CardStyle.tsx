@@ -1,7 +1,7 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 interface CardBodyProps {
-  $top?: boolean
+  $top?: boolean;
 }
 
 export const CardContainer = styled.section`
@@ -20,31 +20,28 @@ export const CardContainer = styled.section`
   &:hover {
     transform: translateY(-5px);
   }
-  
-`
+`;
 
 export const CardBody = styled.article<CardBodyProps>`
   display: flex;
-  align-items: flex-start; 
-  justify-content: center;
-  justify-content: space-between;
-  padding: 16px; /* Adiciona espaço interno */
+  align-items: flex-start;
+  justify-content: space-between; /* mantive apenas esse */
+  padding: 16px;
   padding-top: 40px;
   padding-right: 40px;
   gap: 1rem;
-  position: relative
+  position: relative;
 
   font-size: ${(props) => (props.$top ? "1.5rem" : ".9rem")};
 
   h2 {
     margin-bottom: 1rem;
-    font-size: ${(props) => (props.$top ? "3rem" : "1.5rem")}; // usei templantes string
+    font-size: ${(props) => (props.$top ? "3rem" : "1.5rem")}; // usei template strings
   }
 
   img {
     width: ${(props) => (props.$top ? "164px" : "120px")};
     height: ${(props) => (props.$top ? "236px" : "180px")};
-
     flex-shrink: 0;
     overflow: hidden;
     border-radius: 4px;
@@ -57,16 +54,16 @@ export const CardBody = styled.article<CardBodyProps>`
   img:hover {
     transform: scale(1.05);
   }
-`
+`;
 
 export const CardFooter = styled.article`
   display: flex;
   align-items: center;
   gap: 1rem;
 
-  div{
+  div {
     display: flex;
-    align-items: center; 
+    align-items: center;
     gap: 1rem;
   }
 
@@ -90,16 +87,15 @@ export const CardFooter = styled.article`
       transform: rotate(-10deg) scale(1.2);
     }
   }
-  
-`
-// abaixo do poster
+`;
+
 export const CardRight = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 
   .detalhes {
-    margin-top: 2.5rem; /* Aumenta o espaço entre a imagem e o texto */
+    margin-top: 2.5rem;
     font-size: 14px;
     text-align: left;
   }
@@ -109,5 +105,4 @@ export const EditIcon = styled.i`
   font-size: 1.5rem;
   color: #005954;
   cursor: pointer;
-  
 `;

@@ -2,7 +2,7 @@
 
 // Interfaces específicas para os objetos
 export interface SinopseObject {
-  omentario: string | ComentarioObject; // 'omentario' parece um erro de digitação, talvez seja 'comentario'?
+  omentario: string | ComentarioObject;
   descricao: string;
   id?: number | string;
 }
@@ -15,17 +15,16 @@ export interface ComentarioObject {
 export interface Filme {
   id?: number;
   nome: string;
-  title?: string;
   sinopse: string | SinopseObject;
   poster: string;
   classificacao: string;
   duracao: string;
   genero: string;
   nota: string;
-  comentario: string | ComentarioObject; 
+  comentario: string | ComentarioObject;
   genero_filme?: {
     genero: {
-      id?: number;
+      id: number; // <--- REMOVEU O '?' TORNANDO 'id' OBRIGATÓRIO
       descricao: string;
     };
   }[];
