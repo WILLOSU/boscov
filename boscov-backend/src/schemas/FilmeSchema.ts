@@ -10,6 +10,6 @@ export const filmeSchema = z.object({
   duracao: z.number().int(),
   produtora: z.string(),
   classificacao: z.string(),
-  generoId: z.number().int(),
+  generos: z.array(z.number().int()).optional(), 
   status: z.boolean().optional()
 });

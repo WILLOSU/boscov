@@ -2,360 +2,401 @@
 import { prisma } from './PrismaService';
 
 export const getAllFilmes = async (limit: number = 4, offset: number = 0) => {
-  // Aqui mantemos a implementação do Prisma para paginação
-  return await prisma.filme.findMany({
-    skip: offset,
-    take: limit,
-    orderBy: {
-      id: 'desc' // do último postado
-    }
-  });
+    return await prisma.filme.findMany({
+        skip: offset,
+        take: limit,
+        orderBy: {
+            id: 'desc'
+        },
+        include: {
+            genero_filme: {
+                include: {
+                    genero: {
+                        select: {
+                            id: true,
+                            descricao: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
 };
 
 export const countFilmes = async () => {
-  return await prisma.filme.count();
+    return await prisma.filme.count();
 };
 
 export const topFilme = async () => {
-  const filmes = await prisma.filme.findMany({
-    include: {
-      avaliacao: true,
-      genero: true
-    }
-  });
+    const filmes = await prisma.filme.findMany({
+        include: {
+            avaliacao: true,
+            genero_filme: {
+                include: {
+                    genero: {
+                        select: {
+                            id: true,
+                            descricao: true,
+                        },
+                    },
+                },
+            },
+        }
+    });
 
-  if (!filmes.length) return null;
+    if (!filmes.length) return null;
 
-  // Calcula a média das avaliações de cada filme e retorna o que tiver a maior média
-  return filmes
-    .map(filme => {
-      const totalNotas = filme.avaliacao.reduce((somaNotas, avaliacaoAtual) => {
-        return somaNotas + avaliacaoAtual.nota;
-      }, 0);
-  
-      const mediaNotas = filme.avaliacao.length > 0
-        ? totalNotas / filme.avaliacao.length
-        : 0;
-  
-      return {
-        ...filme,
-        media: mediaNotas
-      };
-    })
-    .sort((filmeA, filmeB) => filmeB.media - filmeA.media)[0]; // Retorna o filme com a maior média
-  
+    return filmes
+        .map(filme => {
+            const totalNotas = filme.avaliacao.reduce((somaNotas, avaliacaoAtual) => {
+                return somaNotas + avaliacaoAtual.nota;
+            }, 0);
+
+            const mediaNotas = filme.avaliacao.length > 0
+                ? totalNotas / filme.avaliacao.length
+                : 0;
+
+            return {
+                ...filme,
+                media: mediaNotas
+            };
+        })
+        .sort((filmeA, filmeB) => filmeB.media - filmeA.media)[0];
 };
 
 export const getFilmeById = async (id: number) => {
-  return await prisma.filme.findUnique({
-    where: { id },
-    include: {
-      genero_filme: {
+    return await prisma.filme.findUnique({
+        where: { id },
         include: {
-          genero: true, // Inclui os dados do gênero associado
-        },
-      },
-      avaliacao: {
-        include: {
-          usuario: {
-            select: {
-              id: true,
-              nome: true,
-              email: true,
-              apelido: true,
+            genero_filme: {
+                include: {
+                    genero: true, // Inclui os dados completos do gênero
+                },
             },
-          },
+            avaliacao: {
+                include: {
+                    usuario: {
+                        select: {
+                            id: true,
+                            nome: true,
+                            email: true,
+                            apelido: true,
+                        },
+                    },
+                },
+            },
         },
-      },
-    },
-  });
+    });
 };
 
 export const getAllGeneros = async () => {
-  return await prisma.genero.findMany();
+    return await prisma.genero.findMany();
 };
 
 
 export const createFilme = async (data: any) => {
   const { generos: generoIds, ...filmeData } = data; // Espera um array 'generos' com os IDs
 
-  const filme = await prisma.filme.create({
-    data: {
-      ...filmeData,
-      anoLancamento: Number(filmeData.anoLancamento),
-      duracao: Number(filmeData.duracao),
-      usuarioCriador: Number(filmeData.usuarioCriador),
-    },
+  const filmeCriado = await prisma.filme.create({
+      data: {
+          ...filmeData,
+          anoLancamento: Number(filmeData.anoLancamento),
+          duracao: Number(filmeData.duracao),
+          usuarioCriador: Number(filmeData.usuarioCriador),
+          status: filmeData.status,
+          genero_filme: { // Indica que vamos criar registros na tabela de relacionamento
+              createMany: {
+                  data: generoIds.map((idGenero: number) => ({
+                      idGenero: Number(idGenero),
+                  })),
+              },
+          },
+      },
+      include: {
+          genero_filme: {
+              include: {
+                  genero: {
+                      select: {
+                          id: true,
+                          descricao: true,
+                      },
+                  },
+              },
+          },
+      },
   });
 
-  if (generoIds && Array.isArray(generoIds)) {
-    await Promise.all(
-      generoIds.map((idGenero: number) =>
-        prisma.genero_filme.create({
-          data: {
-            idFilme: filme.id,
-            idGenero,
-          },
-        })
-      )
-    );
-  }
-
-  return filme;
+  return filmeCriado;
 };
-
-
 
 
 export const updateFilme = async (id: number, data: any) => {
   const { generos: generoIds, ...filmeData } = data;
 
-  const filmeAtualizado = await prisma.filme.update({
-    where: { id },
-    data: {
-      ...filmeData,
-      anoLancamento: Number(filmeData.anoLancamento),
-      duracao: Number(filmeData.duracao),
-      usuarioCriador: Number(filmeData.usuarioCriador),
-      dataAtualizacao: new Date(),
-    },
+  await prisma.filme.update({
+      where: { id },
+      data: {
+          ...filmeData,
+          anoLancamento: Number(filmeData.anoLancamento),
+          duracao: Number(filmeData.duracao),
+          usuarioCriador: Number(filmeData.usuarioCriador),
+          dataAtualizacao: new Date(),
+      },
   });
 
   // Atualiza os gêneros (remover os existentes e adicionar os novos)
   await prisma.genero_filme.deleteMany({
-    where: { idFilme: id },
+      where: { idFilme: id },
   });
 
   if (generoIds && Array.isArray(generoIds)) {
-    await Promise.all(
-      generoIds.map((idGenero: number) =>
-        prisma.genero_filme.create({
-          data: {
-            idFilme: id,
-            idGenero,
-          },
-        })
-      )
-    );
+      await Promise.all(
+          generoIds.map((idGenero: number) =>
+              prisma.genero_filme.create({
+                  data: {
+                      idFilme: id,
+                      idGenero,
+                  },
+              })
+          )
+      );
   }
 
-  return filmeAtualizado;
+  // Busca novamente o filme atualizado, incluindo os gêneros
+  const filmeAtualizadoComGeneros = await prisma.filme.findUnique({
+      where: { id },
+      include: {
+          genero_filme: {
+              include: {
+                  genero: {
+                      select: {
+                          id: true,
+                          descricao: true,
+                      },
+                  },
+              },
+          },
+      },
+  });
+
+  return filmeAtualizadoComGeneros;
 };
 
-  
 
 export const deleteFilme = async (id: number) => {
-  return await prisma.filme.update({
-    where: { id },
-    data: {
-      status: false,
-      dataAtualizacao: new Date(),
-    },
-  });
+    return await prisma.filme.update({
+        where: { id },
+        data: {
+            status: false,
+            dataAtualizacao: new Date(),
+        },
+    });
 };
 
 export const restoreFilme = async (id: number) => {
-  return await prisma.filme.update({
-    where: { id },
-    data: {
-      status: true,
-      dataAtualizacao: new Date(),
-    },
-  });
+    return await prisma.filme.update({
+        where: { id },
+        data: {
+            status: true,
+            dataAtualizacao: new Date(),
+        },
+    });
 };
 
-  // Contar filmes pelo nome
-  export const countFilmesByNome = async (nome: string) => {
+// Contar filmes pelo nome
+export const countFilmesByNome = async (nome: string) => {
     return await prisma.filme.count({
-      where: {
-        nome: {
-          contains: nome.toLowerCase(),
-          //mode: 'insensitive'
+        where: {
+            nome: {
+                contains: nome.toLowerCase(),
+                //mode: 'insensitive'
+            }
         }
-      }
     });
-  };
+};
 // Buscar filmes pelo nome com paginação
 export const findFilmesByNome = async (nome: string, limit: number = 4, offset: number = 0) => {
-  return await prisma.filme.findMany({
-    where: {
-      nome: {
-        contains: nome.toLowerCase(),
-       // mode: 'insensitive'
-      },
-    },
-    skip: offset,
-    take: limit,
-    orderBy: {
-      nome: 'asc'
-    },
-  })
+    return await prisma.filme.findMany({
+        where: {
+            nome: {
+                contains: nome.toLowerCase(),
+                // mode: 'insensitive'
+            },
+        },
+        skip: offset,
+        take: limit,
+        orderBy: {
+            nome: 'asc'
+        },
+        include: {
+            genero_filme: {
+                include: {
+                    genero: {
+                        select: {
+                            id: true,
+                            descricao: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
 }
 
 // Funções para avaliações de filmes
 
 // Função para validar a nota do filme
 export const validarNotaFilme = (nota: number): boolean => {
-  return nota >= 1 && nota <= 10
+    return nota >= 1 && nota <= 10
 }
 
 // Função para converter a nota para estrelas (com granularidade de quartos)
 export const converterNotaParaEstrelasQuartos = (nota: number, maxEstrelas = 5): number => {
-  if (!validarNotaFilme(nota)) {
-    console.warn(`A nota ${nota} está fora do intervalo válido (1 - 10).`)
-    return 0
-  }
+    if (!validarNotaFilme(nota)) {
+        console.warn(`A nota ${nota} está fora do intervalo válido (1 - 10).`)
+        return 0
+    }
 
-  const escalaQuartosEstrelas = ((nota - 1) * (maxEstrelas * 4)) / 9
-  const quartosArredondados = Math.round(escalaQuartosEstrelas) / 4
-  return Math.min(maxEstrelas, Math.max(0, quartosArredondados))
+    const escalaQuartosEstrelas = ((nota - 1) * (maxEstrelas * 4)) / 9
+    const quartosArredondados = Math.round(escalaQuartosEstrelas) / 4
+    return Math.min(maxEstrelas, Math.max(0, quartosArredondados))
 }
 
 // Criar nova avaliação
 export const createAvaliacao = async (idUsuario: number, idFilme: number, nota: number, comentario?: string) => {
-  return await prisma.avaliacao.create({
-    data: {
-      idUsuario,
-      idFilme,
-      nota,
-      comentario,
-    },
-    include: {
-      usuario: {
-        select: {
-          id: true,
-          nome: true,
-          email: true,
-          apelido: true,
+    return await prisma.avaliacao.create({
+        data: {
+            idUsuario,
+            idFilme,
+            nota,
+            comentario,
         },
-      },
-    },
-  })
+        include: {
+            usuario: {
+                select: {
+                    id: true,
+                    nome: true,
+                    email: true,
+                    apelido: true,
+                },
+            },
+        },
+    })
 }
 
 // Atualizar avaliação existente
 export const updateAvaliacao = async (id: number, nota: number, comentario?: string) => {
-  return await prisma.avaliacao.update({
-    where: { id },
-    data: {
-      nota,
-      comentario,
-    },
-    include: {
-      usuario: {
-        select: {
-          id: true,
-          nome: true,
-          email: true,
-          apelido: true,
+    return await prisma.avaliacao.update({
+        where: { id },
+        data: {
+            nota,
+            comentario,
         },
-      },
-    },
-  })
+        include: {
+            usuario: {
+                select: {
+                    id: true,
+                    nome: true,
+                    email: true,
+                    apelido: true,
+                },
+            },
+        },
+    })
 }
 
 // FUTURO
 
 // Remover avaliação
 export const deleteAvaliacao = async (id: number) => {
-  return await prisma.avaliacao.delete({
-    where: { id },
-  })
+    return await prisma.avaliacao.delete({
+        where: { id },
+    })
 }
 
 // Buscar avaliação por usuário e filme
 export const getAvaliacaoByUserAndFilme = async (idUsuario: number, idFilme: number) => {
-  return await prisma.avaliacao.findFirst({
-    where: {
-      idUsuario,
-      idFilme,
-    },
-    include: {
-      usuario: {
-        select: {
-          id: true,
-          nome: true,
-          email: true,
-          apelido: true,
+    return await prisma.avaliacao.findFirst({
+        where: {
+            idUsuario,
+            idFilme,
         },
-      },
-    },
-  })
+        include: {
+            usuario: {
+                select: {
+                    id: true,
+                    nome: true,
+                    email: true,
+                    apelido: true,
+                },
+            },
+        },
+    })
 }
 
 // Buscar todas as avaliações de um filme
 export const getAvaliacoesByFilmeId = async (idFilme: number) => {
-  return await prisma.avaliacao.findMany({
-    where: { idFilme },
-    include: {
-      usuario: {
-        select: {
-          id: true,
-          nome: true,
-          email: true,
-          apelido: true,
+    return await prisma.avaliacao.findMany({
+        where: { idFilme },
+        include: {
+            usuario: {
+                select: {
+                    id: true,
+                    nome: true,
+                    email: true,
+                    apelido: true,
+                },
+            },
         },
-      },
-    },
-    orderBy: {
-      id: "desc",
-    },
-  })
+        orderBy: {
+            id: "desc",
+        },
+    })
 }
 
 // Calcular média de avaliações de um filme
 export const calcularMediaAvaliacoesFilme = async (idFilme: number) => {
-  const avaliacoes = await prisma.avaliacao.findMany({
-    where: { idFilme },
-    select: { nota: true },
-  })
+    const avaliacoes = await prisma.avaliacao.findMany({
+        where: { idFilme },
+        select: { nota: true },
+    })
 
-  if (avaliacoes.length === 0) {
-    return 0
-  }
+    if (avaliacoes.length === 0) {
+        return 0
+    }
 
-  const somaNotas = avaliacoes.reduce((sum, avaliacao) => sum + avaliacao.nota, 0)
-  return somaNotas / avaliacoes.length
+    const somaNotas = avaliacoes.reduce((sum, avaliacao) => sum + avaliacao.nota, 0)
+    return somaNotas / avaliacoes.length
 }
 
 // Função para buscar filmes criados por um usuário específico
-
 export async function findPostsByUserIdService(userId: number) {
-  try {
-    const filmes = await prisma.filme.findMany({
-      where: {
-        usuarioCriador: userId,
-        status: true,
-      },
-      select: {
-        id: true,
-        nome: true,
-        diretor: true,
-        anoLancamento: true,
-        duracao: true,
-        produtora: true,
-        classificacao: true,
-        poster: true,
-        sinopse: true,
-        dataAtualizacao: true,
-        genero: {   // Mantém a relação completa do gênero
-          select: {
-            id: true,
-            descricao: true,
-          },
-        },
-      },
-      orderBy: {
-        dataAtualizacao: 'desc',
-      },
-    });
+    try {
+        const filmes = await prisma.filme.findMany({
+            where: {
+                usuarioCriador: userId,
+                status: true,
+            },
+            include: {
+                genero_filme: {
+                    include: {
+                        genero: {
+                            select: {
+                                id: true,
+                                descricao: true,
+                            },
+                        },
+                    },
+                },
+            },
+            orderBy: {
+                dataAtualizacao: 'desc',
+            },
+        });
 
-    // Retorna os filmes com o objeto completo do gênero
-    return filmes;
-  } catch (error) {
-    console.error("Erro ao buscar filmes do usuário:", error);
-    throw error;
-  }
+        return filmes;
+    } catch (error) {
+        console.error("Erro ao buscar filmes do usuário:", error);
+        throw error;
+    }
 }
-
-
