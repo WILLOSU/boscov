@@ -410,22 +410,22 @@ export class FilmeController {
     async findPostsByUserId(req: Request, res: Response): Promise<void> {
         try {
             const userId = Number(req.params.id);
-
+    
             // Validação básica
             if (isNaN(userId) || userId <= 0) {
                 res.status(400).json({ message: "ID de usuário inválido" });
                 return;
             }
-
+    
             const posts = await findPostsByUserIdService(userId);
-
+            console.log("Dados recebidos do serviço (findPostsByUserIdService):", posts); 
             if (!posts || posts.length === 0) {
                 res
                     .status(404)
                     .json({ message: "Nenhum post encontrado para este usuário." });
                 return;
             }
-
+    
             res.status(200).json(posts);
         } catch (error) {
             console.error("Erro ao buscar posts por usuário:", error);
