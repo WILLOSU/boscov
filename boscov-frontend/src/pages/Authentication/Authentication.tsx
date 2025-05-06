@@ -11,10 +11,13 @@ import { signin, SigninData } from "../../services/usuariosServices";
 
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export function Authentication() {
   // dois componentes em formulário
   // utilizei apelido na desustruração de objetos
+
+  const [loginError, setLoginError] = useState("");
 
   const {
     register: registerSignup,
@@ -36,7 +39,6 @@ export function Authentication() {
       if (response.data && response.data.token) {
         Cookies.set("token", response.data.token, { expires: 1, path: "/" }); // Salva o token como cookie
         navigate("/");
-        
       } else {
         console.error(
           "Token não recebido na resposta de cadastro:",
@@ -49,19 +51,24 @@ export function Authentication() {
   }
 
   async function inHandleSubmit(data: SigninData): Promise<void> {
+    setLoginError(""); // Limpa qualquer erro anterior ao tentar logar novamente
     try {
       const response = await signin(data);
-
-      // Aqui você pode acessar diretamente o token da resposta
+  
       if (response && response.token) {
         Cookies.set("token", response.token, { expires: 1, path: "/" });
         navigate("/");
-       
       } else {
         console.error("Token não recebido na resposta de login:", response);
+        setLoginError("Erro ao fazer login: Token não recebido."); // Mensagem de erro genérica
       }
     } catch (error) {
-      console.log(error);
+      console.log("Erro no login:", error);
+      if (error instanceof Error && error.message) { // Verifica se 'error' é uma instância de Error e tem a propriedade 'message'
+        setLoginError(error.message); // Exibe a mensagem de erro da sua função signin
+      } else {
+        setLoginError("Erro ao fazer login. Verifique suas credenciais."); // Mensagem de erro genérica
+      }
     }
   }
 
@@ -90,12 +97,13 @@ export function Authentication() {
           {errorsSignin.password && (
             <ErrorSpan>{errorsSignin.password.message}</ErrorSpan>
           )}
+          {loginError && (
+            <ErrorSpan style={{ color: "red" }}>{loginError}</ErrorSpan>
+          )}
           <Button type="submit" variant="signin">
             Acessar Conta
           </Button>
         </form>
-
-        {/* SIGNPU */}
       </Section>
       <Section type="signup">
         <h2>Cadastrar</h2>

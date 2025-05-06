@@ -91,23 +91,27 @@ export const searchFilmes = async (titulo: string, limit = 1000, offset = 0) => 
   })
 }
 
+
 export async function getAllPostsByUser(userId: number): Promise<Filme[]> {
   try {
     if (!userId) {
-      throw new Error("ID do usuário não fornecido")
+      throw new Error("ID do usuário não fornecido");
     }
 
-    const token = getToken()
+    const token = getToken();
     const response = await axios.get<Filme[]>(`${baseUrl}/api/byUserId/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
+      params: {
+        include: 'genero_filme.genero', // Adicione este parâmetro para incluir os gêneros
+      },
+    });
 
-    return response.data
+    return response.data;
   } catch (error) {
-    console.error("Erro ao buscar posts do usuário:", error)
-    return []
+    console.error("Erro ao buscar posts do usuário:", error);
+    return [];
   }
 }
 
