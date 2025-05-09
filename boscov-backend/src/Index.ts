@@ -17,7 +17,6 @@ import authRoutes from './routes/AuthRoutes';
 import userRoutes from './routes/UserRoutes';
 import filmeRoutes from './routes/FilmeRoutes';
 import generoRoutes from './routes/GeneroRoutes';
-import avaliacaoRoutes from './routes/AvaliacaoRoutes';
 import swaggerRoute from "./routes/SwaggerRoutes";
 
 // Configuração das rotas
@@ -25,7 +24,6 @@ app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
 app.use('/api', filmeRoutes);
 app.use('/generos', generoRoutes);
-app.use('/avaliacao', avaliacaoRoutes);
 app.use('/doc', swaggerRoute);
 
 // Define porta de forma segura para dev e produção
