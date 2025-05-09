@@ -41,5 +41,7 @@ import React, {
       </UserContext.Provider>
     );
   };
-  
+
+  // herda de userContext o meu user e o setUser que é o meu estado
+  // para os meus filhos {children} que eu receber aqui!! #59
   export default UserProvider;

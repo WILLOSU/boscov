@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const AddFilmesContainer = styled.section`
-  width: 60%;
+  width: 80%;
   margin: 1rem auto;
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@ export const AddFilmesContainer = styled.section`
   }
 
   form {
-    min-width: 80%;
+    min-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -23,7 +23,7 @@ export const AddFilmesContainer = styled.section`
     gap: 1rem;
 
     input {
-      width: 100%;
+      width: 80%;
     }
   }
 `;

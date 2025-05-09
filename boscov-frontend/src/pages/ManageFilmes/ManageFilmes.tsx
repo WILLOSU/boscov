@@ -277,6 +277,7 @@ export function ManageFilmes() {
             name="sinopse"
             register={registerFilmes}
             isInput={false}
+            style={{ width: '80%' }}
           />
           {errosRegisterFilmes.sinopse && (
             <ErrorSpan>{errosRegisterFilmes.sinopse.message}</ErrorSpan>

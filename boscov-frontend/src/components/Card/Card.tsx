@@ -1,9 +1,20 @@
 import type { Filme } from "../../Datas";
-import { CardContainer, CardBody, CardFooter, CardRight, EditIcon } from "./CardStyle";
+import {
+  CardContainer,
+  CardBody,
+  CardFooter,
+  CardRight,
+  EditIcon,
+} from "./CardStyle";
 import { Link } from "react-router-dom";
 
 interface CardProps {
-  filme: Filme & { genero_filme?: { genero: { id: number; descricao: string } }[] } | null | undefined;
+  filme:
+    | (Filme & {
+        genero_filme?: { genero: { id: number; descricao: string } }[];
+      })
+    | null
+    | undefined;
   top?: boolean;
   showEditIcon?: boolean;
 }
@@ -15,7 +26,8 @@ const safeRender = (value: unknown): string => {
 
   if (typeof value === "object") {
     const obj = value as Record<string, unknown>;
-    if (obj?.descricao && typeof obj.descricao === "string") return obj.descricao;
+    if (obj?.descricao && typeof obj.descricao === "string")
+      return obj.descricao;
     if (obj?.nome && typeof obj.nome === "string") return obj.nome;
     if (obj?.id) return String(obj.id);
 
@@ -31,7 +43,6 @@ const safeRender = (value: unknown): string => {
 
 export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
   console.log("Dados do filme no Card:", filme); // Console para ver o objeto filme completo
-  
 
   if (filme?.genero_filme) {
     console.log("filme.genero_filme:", filme.genero_filme); // Console para ver a propriedade genero_filme
@@ -49,9 +60,17 @@ export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
 
   return (
     <CardContainer>
-      <CardBody $top={top} style={{ position: 'relative' }}>
+      <CardBody $top={top} style={{ position: "relative" }}>
         {showEditIcon && (
-          <Link to={`/manage-filmes/edit/${filme?.id}`} style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 1 }}>
+          <Link
+            to={`/manage-filmes/edit/${filme?.id}`}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "10px",
+              zIndex: 1,
+            }}
+          >
             <EditIcon className="bi bi-pencil-square" />
           </Link>
         )}
@@ -60,7 +79,10 @@ export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
           <p>{safeRender(filme?.sinopse)}</p>
         </div>
         <CardRight>
-          <img src={filme?.poster || "/placeholder.svg"} alt={`Poster de ${safeRender(filme?.nome)}`} />
+          <img
+            src={filme?.poster || "/placeholder.svg"}
+            alt={`Poster de ${safeRender(filme?.nome)}`}
+          />
           <article className="detalhes">
             <div>
               <p>Classificação: {safeRender(filme?.classificacao)}</p>
@@ -68,9 +90,11 @@ export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
               <br />
               <p>Gênero (s):</p>
               {filme?.genero_filme && filme.genero_filme.length > 0 ? (
-                <div style={{ marginLeft: '1px' }}> {/* Adiciona um pequeno recuo */}
+                <div style={{ marginLeft: "1px" }}>
+                  {" "}
+                  {/* Adiciona um pequeno recuo */}
                   {filme.genero_filme.map((gf) => (
-                    <p key={gf.genero.id} style={{ marginBottom: '5px' }}>
+                    <p key={gf.genero.id} style={{ marginBottom: "5px" }}>
                       {safeRender(gf.genero.descricao)}
                     </p>
                   ))}
@@ -84,11 +108,20 @@ export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
       </CardBody>
       <CardFooter>
         <div>
-          <i className="bi bi-star-fill"></i>
+          {/* Link para avaliação por estrelas */}
+          <Link to={`/filme/${filme?.id}/avaliar`} title="Avaliar filme">
+            <i className="bi bi-star-fill"></i>
+          </Link>
           <span>{safeRender(filme?.nota)}</span>
         </div>
         <div>
-          <i className="bi bi-chat-fill"></i>
+          {/* Link para comentários */}
+          <Link
+            to={`/filme/${filme?.id}/comentario/adicionar`}
+            title="Adicionar comentário"
+          >
+            <i className="bi bi-chat-fill"></i>
+          </Link>
           <span>{safeRender(filme?.comentario)}</span>
         </div>
       </CardFooter>

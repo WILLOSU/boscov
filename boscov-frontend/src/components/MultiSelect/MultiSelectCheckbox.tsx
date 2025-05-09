@@ -30,6 +30,8 @@ export function MultiSelectCheckbox({
         padding: '10px',
         borderRadius: '4px',
         gridAutoFlow: 'column', // <---- PREENCHE POR COLUNA
+        width: '98%'
+        
       }}>
         {options.map((option) => (
           <label
