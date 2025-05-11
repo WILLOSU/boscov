@@ -259,14 +259,31 @@ export const findFilmesByNome = async (
 export const createAvaliacao = async (
   idUsuario: number,
   idFilme: number,
-  nota: number | null,
+  nota: number | null | string,
   comentario?: string
 ) => {
+  // Converter nota para número se for string
+  let notaNumber: number | null = null;
+  
+  if (nota !== null) {
+    notaNumber = typeof nota === 'string' ? Number(nota) : nota;
+    
+    // Validar se é um número válido
+    if (isNaN(notaNumber)) {
+      throw new Error("A nota deve ser um número válido entre 0 e 5");
+    }
+    
+    // Validar intervalo
+    if (notaNumber < 0 || notaNumber > 5) {
+      throw new Error("A nota deve estar entre 0 e 5");
+    }
+  }
+  
   return await prisma.avaliacao.create({
     data: {
       idUsuario,
       idFilme,
-      nota,
+      nota: notaNumber, // Agora garantidamente número ou null
       comentario,
     },
     include: {
@@ -283,11 +300,32 @@ export const createAvaliacao = async (
 };
 
 // Atualizar avaliação existente
-export const updateAvaliacao = async (id: number, nota: number | null, comentario?: string) => {
+export const updateAvaliacao = async (
+  id: number, 
+  nota: number | null | string, 
+  comentario?: string
+) => {
+  // Converter nota para número se for string
+  let notaNumber: number | null = null;
+  
+  if (nota !== null) {
+    notaNumber = typeof nota === 'string' ? Number(nota) : nota;
+    
+    // Validar se é um número válido
+    if (isNaN(notaNumber)) {
+      throw new Error("A nota deve ser um número válido entre 0 e 5");
+    }
+    
+    // Validar intervalo
+    if (notaNumber < 0 || notaNumber > 5) {
+      throw new Error("A nota deve estar entre 0 e 5");
+    }
+  }
+  
   return await prisma.avaliacao.update({
     where: { id },
     data: {
-      nota,
+      nota: notaNumber, // Agora garantidamente número ou null
       comentario,
     },
     include: {
@@ -300,7 +338,7 @@ export const updateAvaliacao = async (id: number, nota: number | null, comentari
         },
       },
     },
-  })
+  });
 }
 
 
@@ -409,15 +447,36 @@ export async function getComentarioByIdService(comentarioId: number) {
 }
 
 
-export async function updateComentarioService(comentarioId: number, nota: number | null, comentario: string | null) {
+export async function updateComentarioService(
+  comentarioId: number, 
+  nota: number | null | string, 
+  comentario: string | null
+) {
   try {
+    // Converter nota para número se for string
+    let notaNumber: number | null = null;
+    
+    if (nota !== null) {
+      notaNumber = typeof nota === 'string' ? Number(nota) : nota;
+      
+      // Validar se é um número válido
+      if (isNaN(notaNumber)) {
+        throw new Error("A nota deve ser um número válido entre 0 e 5");
+      }
+      
+      // Validar intervalo
+      if (notaNumber < 0 || notaNumber > 5) {
+        throw new Error("A nota deve estar entre 0 e 5");
+      }
+    }
+    
     // Atualizar o comentário no banco de dados
     const comentarioAtualizado = await prisma.avaliacao.update({
       where: {
         id: comentarioId,
       },
       data: {
-        nota,
+        nota: notaNumber, // Agora garantidamente número ou null
         comentario,
       },
       include: {
