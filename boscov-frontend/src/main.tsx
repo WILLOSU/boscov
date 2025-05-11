@@ -11,7 +11,8 @@ import Profile from "./pages/Profile/Profile"
 import UserProvider from "./Context/UserContext"
 import { ManageFilmes } from "./pages/ManageFilmes/ManageFilmes"
 import { ComentarioFilme } from "./pages/ComentarioFilme/ComentarioFilme"
-import { AvaliacaoEstrelas } from "./pages/NotasFilmes/NotasFilmes"
+import { AvaliacaoFilme } from "./pages/AvaliacaoFilme/AvaliacaoFilme"
+
 
 // Definindo as rotas
 const router = createBrowserRouter([
@@ -57,7 +58,7 @@ const router = createBrowserRouter([
 
       {
         path: "/filme/:id/avaliar",
-        element: <AvaliacaoEstrelas />,
+        element: <AvaliacaoFilme />,
       },
     ],
   },

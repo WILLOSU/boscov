@@ -97,18 +97,48 @@ export interface ComentarioFrontend {
   }
 }
 
-// Interface para notas no frontend
-export interface NotaFrontend {
-  // Defina as propriedades da sua interface NotaFrontend aqui
+// Tipos existentes...
+
+// Tipo para Avaliação no Frontend
+export interface AvaliacaoFrontend {
   id: number;
-  filmeId: number;
-  usuarioId: number;
+  idFilme: number;
+  idUsuario: number;
   nota: number;
-  dataAvaliacao: string;
+  createdAt?: string;
+  updatedAt?: string;
+  usuarioNome?: string; // Nome do usuário que fez a avaliação (opcional)
 }
 
-export interface EstatisticasAvaliacao {
-  media: number;
-  total: number;
-  distribuicao: Record<number, number>;
+// Expandir o tipo FilmeDetalhes para incluir avaliações
+export interface FilmeDetalhes {
+  // Campos existentes...
+  id: number;
+  titulo: string;
+  descricao: string;
+  imagem: string;
+  ano: number;
+  duracao: string;
+  genero: string;
+  diretor: string;
+  // Campos de avaliação
+  mediaAvaliacoes?: number;
+  totalAvaliacoes?: number;
+  minhaAvaliacao?: number;
+  avaliacoes?: AvaliacaoFrontend[];
+}
+
+export interface AvaliacaoFrontend {
+  id: number
+  filmeId: string
+  usuarioId: number
+  nota: number
+  comentario: string
+  //createdAt: string
+  //updatedAt: string
+}
+
+export interface AvaliarFilmePayload {
+  nota: number
+  comentario: string
 }

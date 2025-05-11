@@ -51,7 +51,7 @@ export function Authentication() {
   }
 
   async function inHandleSubmit(data: SigninData): Promise<void> {
-    setLoginError(""); // Limpa qualquer erro anterior ao tentar logar novamente
+    setLoginError(""); 
     try {
       const response = await signin(data);
   
@@ -62,10 +62,10 @@ export function Authentication() {
         console.error("Token não recebido na resposta de login:", response);
         setLoginError("Erro ao fazer login: Token não recebido."); // Mensagem de erro genérica
       }
-    } catch (error) {
+    } catch (error ) {
       console.log("Erro no login:", error);
       if (error instanceof Error && error.message) { // Verifica se 'error' é uma instância de Error e tem a propriedade 'message'
-        setLoginError(error.message); // Exibe a mensagem de erro da sua função signin
+        setLoginError("Senha ou e-mail incorretos. Digite novamente, por favor."); // Exibe a mensagem de erro da sua função signin
       } else {
         setLoginError("Erro ao fazer login. Verifique suas credenciais."); // Mensagem de erro genérica
       }

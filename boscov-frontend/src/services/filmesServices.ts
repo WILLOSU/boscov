@@ -6,6 +6,8 @@ import type { FilmesData } from "../components/Interface/Types";
 const baseUrl: string = "http://localhost:3000";
 //const baseUrl = "https://renderboscov.onrender.com";
 
+
+
 //// CRUD FILME
 
 // CREATE
@@ -145,6 +147,7 @@ export async function restaurarFilme(id: string) {
   }
 }
 
+
 // TOKEN
 export const getToken = () => {
   const token = Cookies.get("token");
@@ -154,6 +157,7 @@ export const getToken = () => {
   }
   return token;
 };
+
 
 // TDS FILMES
 export async function getAllFilmes() {
@@ -260,6 +264,7 @@ export async function getComentarios(
   }
 }
 
+
 //////////////////////////////////////////////////////////////////////////////////////////
 //Avaliações
 
@@ -311,10 +316,6 @@ export async function avaliarFilme(
 ): Promise<AvaliacaoFrontend> {
   try {
     const token = getToken();
-    if (payload.nota < 1 || payload.nota > 5) {
-      console.error("Erro ao avaliar o filme: Nota fora do intervalo válido (1-5)");
-      throw new Error("A nota deve estar entre 1 e 5.");
-    }
     const response = await axios.patch<AvaliacaoFrontend>(
       `${baseUrl}/api/nota/${filmeId}`,
       payload,

@@ -6,7 +6,6 @@ import { HomeBody, HomeHeader } from "./HomeStyled";
 import { getAllFilmes, getTopFilme } from "../../services/filmesServices";
 import { useEffect, useState } from "react";
 
-
 // Defina tipos para seus estados
 type LoadingState = { all: boolean; top: boolean };
 type ErrorState = { all: string | null; top: string | null };
