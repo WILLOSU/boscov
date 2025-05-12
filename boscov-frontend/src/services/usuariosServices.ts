@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import  { baseUrl }  from '../utils/apiConfig';
 
 // Remover confirmPassword da interface SignupData
 export interface SignupData {
@@ -15,7 +16,6 @@ export interface SigninData {
   password: string;
 }
 
-const baseUrl: string = "http://localhost:3000";
 
 export async function signup(data: SignupData & { confirmPassword: string }) {
   if (data.password !== data.confirmPassword) {

@@ -11,7 +11,7 @@ import {
 } from "./CardStyle";
 import { Link } from "react-router-dom";
 import { useFilmeAvaliacao } from "../../hooks/useFilmeAvaliacao";
-import { EstrelasAvaliacao } from "../EstrellasAvaliacao/EtrellasAvaliacao";
+import { EstrelasAvaliacao } from "../EstrellasAvaliacao/EstrellasAvaliacao";
 
 interface CardProps {
   filme:

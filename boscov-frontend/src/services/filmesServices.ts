@@ -2,9 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import type { Filme, AvaliacaoFrontend, AvaliarFilmePayload } from "../Datas";
 import type { FilmesData } from "../components/Interface/Types";
+import  { baseUrl }  from '../utils/apiConfig';
 
-const baseUrl: string = "http://localhost:3000";
-//const baseUrl = "https://renderboscov.onrender.com";
 
 
 

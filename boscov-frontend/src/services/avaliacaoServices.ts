@@ -1,9 +1,9 @@
 import axios from "axios";
 import { getToken } from "./filmesServices";
 import type { AvaliacaoFrontend } from "../components/Interface/Types";
+import  { baseUrl }  from '../utils/apiConfig';
 
-const baseUrl: string = "http://localhost:3000";
-//const baseUrl = "https://renderboscov.onrender.com";
+
 
 // Cache para armazenar temporariamente médias e contagens de avaliações
 interface CacheItem {

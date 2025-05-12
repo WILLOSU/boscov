@@ -1,9 +1,9 @@
 import axios from "axios";
 import { getToken } from "./filmesServices"; 
 import type { ComentarioFrontend } from "../components/Interface/Types"; 
+import  { baseUrl }  from '../utils/apiConfig';
 
-const baseUrl: string = "http://localhost:3000";
-//const baseUrl = "https://renderboscov.onrender.com";
+
 
 // Buscar comentário de um usuário específico para um filme
 export async function getComentario(

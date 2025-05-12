@@ -14,10 +14,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export function Authentication() {
-  // dois componentes em formulário
-  // utilizei apelido na desustruração de objetos
-
   const [loginError, setLoginError] = useState("");
+  const [signupFeedback, setSignupFeedback] = useState<string | null>(null); // Novo estado para feedback de cadastro
+  const [signupFeedbackType, setSignupFeedbackType] = useState<
+    "success" | "error" | null
+  >(null); // Tipo do feedback
 
   const {
     register: registerSignup,
@@ -34,40 +35,61 @@ export function Authentication() {
   const navigate = useNavigate();
 
   async function upHandleSubmit(data: SignupData): Promise<void> {
+    setSignupFeedback(null); // Limpa o feedback anterior
+    setSignupFeedbackType(null);
     try {
       const response = await signup(data);
       if (response.data && response.data.token) {
-        Cookies.set("token", response.data.token, { expires: 1, path: "/" }); // Salva o token como cookie
-        navigate("/");
+        Cookies.set("token", response.data.token, { expires: 1, path: "/" });
+        setSignupFeedback("Usuário cadastrado com sucesso!");
+        setSignupFeedbackType("success");
+        setTimeout(() => {
+          navigate("/");
+        }, 2000); // Opcional: Redirecionar após alguns segundos
       } else {
         console.error(
           "Token não recebido na resposta de cadastro:",
           response.data
         );
+        setSignupFeedback("Erro ao cadastrar: Token inválido recebido.");
+        setSignupFeedbackType("error");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: unknown) {
+      console.error("Erro durante o cadastro:", error);
+      let errorMessage = "Erro desconhecido ao cadastrar.";
+      if (error instanceof Error && error.message) {
+        errorMessage = `Erro ao cadastrar: ${error.message}`;
+      } else if (typeof error === "string") {
+        errorMessage = `Erro ao cadastrar: ${error}`;
+      }
+      setSignupFeedback(errorMessage);
+      setSignupFeedbackType("error");
     }
   }
 
   async function inHandleSubmit(data: SigninData): Promise<void> {
-    setLoginError(""); 
+    setLoginError("");
     try {
       const response = await signin(data);
-  
+
       if (response && response.token) {
         Cookies.set("token", response.token, { expires: 1, path: "/" });
         navigate("/");
       } else {
         console.error("Token não recebido na resposta de login:", response);
-        setLoginError("Erro ao fazer login: Token não recebido."); // Mensagem de erro genérica
+        setLoginError("Erro ao fazer login: Token não recebido.");
       }
-    } catch (error ) {
+    } catch (error: unknown) {
       console.log("Erro no login:", error);
-      if (error instanceof Error && error.message) { // Verifica se 'error' é uma instância de Error e tem a propriedade 'message'
-        setLoginError("Senha ou e-mail incorretos. Digite novamente, por favor."); // Exibe a mensagem de erro da sua função signin
+      const errorMessage = "Erro ao fazer login. Verifique suas credenciais.";
+      if (error instanceof Error && error.message) {
+        setLoginError(
+          "Senha ou e-mail incorretos. Digite novamente, por favor."
+        );
+      } else if (typeof error === "string") {
+        setLoginError(`Erro ao fazer login: ${error}`);
       } else {
-        setLoginError("Erro ao fazer login. Verifique suas credenciais."); // Mensagem de erro genérica
+        setLoginError(errorMessage);
       }
     }
   }
@@ -108,6 +130,15 @@ export function Authentication() {
       <Section type="signup">
         <h2>Cadastrar</h2>
         <form onSubmit={handleSubmitSignup(upHandleSubmit)}>
+          {signupFeedback && (
+            <ErrorSpan
+              style={{
+                color: signupFeedbackType === "success" ? "green" : "red",
+              }}
+            >
+              {signupFeedback}
+            </ErrorSpan>
+          )}
           <Input
             type="text"
             placeholder="Nome"
