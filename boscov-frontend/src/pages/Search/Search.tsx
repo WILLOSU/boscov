@@ -110,6 +110,7 @@ export function Search() {
             key={filme.id}
             filme={{
               ...filme,
+              title: filme.nome, // Adicionando a propriedade title
               nome: filme.nome,
             }}
             top={false}

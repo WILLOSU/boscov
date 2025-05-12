@@ -26,6 +26,7 @@ export interface Filme {
       descricao: string;
     };
   }[];
+  title?: string; // Adicione esta linha
 }
 
 export interface AvaliacaoFrontend {
