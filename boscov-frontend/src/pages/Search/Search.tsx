@@ -110,7 +110,7 @@ export function Search() {
             key={filme.id}
             filme={{
               ...filme,
-              title: filme.nome,
+              nome: filme.nome,
             }}
             top={false}
           />
