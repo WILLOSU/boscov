@@ -26,7 +26,7 @@ export function MultiSelectCheckbox({
         gridTemplateRows: 'repeat(6, auto)', // Tenta criar 6 linhas, mas com auto-flow column, pode ajustar
         gap: '5px',
         marginBottom: '15px',
-        border: '1px solid #ccc',
+        border: '1px solid #757575',
         padding: '10px',
         borderRadius: '4px',
         gridAutoFlow: 'column', // <---- PREENCHE POR COLUNA

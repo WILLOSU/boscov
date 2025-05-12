@@ -5,8 +5,13 @@ import {
   CardFooter,
   CardRight,
   EditIcon,
+  AvaliacaoContainer, 
+  NotaMedia,
+  TotalAvaliacoes,
 } from "./CardStyle";
 import { Link } from "react-router-dom";
+import { useFilmeAvaliacao } from "../../hooks/useFilmeAvaliacao";
+import { EstrelasAvaliacao } from "../EstrellasAvaliacao/EtrellasAvaliacao";
 
 interface CardProps {
   filme:
@@ -42,25 +47,14 @@ const safeRender = (value: unknown): string => {
 };
 
 export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
-  console.log("Dados do filme no Card:", filme); // Console para ver o objeto filme completo
-
-  if (filme?.genero_filme) {
-    console.log("filme.genero_filme:", filme.genero_filme); // Console para ver a propriedade genero_filme
-    filme.genero_filme.forEach((gf, index) => {
-      console.log(`Gênero ${index + 1}:`, gf); // Console para ver cada item dentro de genero_filme
-      if (gf?.genero) {
-        console.log(`  Descrição do Gênero ${index + 1}:`, gf.genero.descricao); // Console para ver a descrição
-      } else {
-        console.log(`  Gênero ${index + 1} não possui a propriedade 'genero'`);
-      }
-    });
-  } else {
-    console.log("filme.genero_filme é nulo ou indefinido.");
-  }
+  // Usando o hook personalizado para buscar avaliações
+  const { mediaAvaliacoes, totalAvaliacoes, loading } = useFilmeAvaliacao(
+    filme?.id
+  );
 
   return (
     <CardContainer>
-      <CardBody $top={top} style={{ position: "relative" }}>
+      <CardBody $top={top}>
         {showEditIcon && (
           <Link
             to={`/manage-filmes/edit/${filme?.id}`}
@@ -77,6 +71,29 @@ export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
         <div>
           <h2>{safeRender(filme?.nome)}</h2>
           <p>{safeRender(filme?.sinopse)}</p>
+
+          {/* Seção de Avaliação Centralizada e Estilizada */}
+          <AvaliacaoContainer>
+            {loading ? (
+              <span style={{ fontSize: "0.85rem", color: "#777" }}>
+                Carregando avaliações...
+              </span>
+            ) : (
+              <>
+                <NotaMedia>{mediaAvaliacoes.toFixed(1)}</NotaMedia>
+                <EstrelasAvaliacao
+                  nota={mediaAvaliacoes}
+                  tamanho="medio" // Ajustei o tamanho para melhor visualização
+                  somenteLeitura={true}
+                  exibirValor={false}
+                />
+                <TotalAvaliacoes>
+                  ({totalAvaliacoes}{" "}
+                  {totalAvaliacoes === 1 ? "avaliação" : "avaliações"})
+                </TotalAvaliacoes>
+              </>
+            )}
+          </AvaliacaoContainer>
         </div>
         <CardRight>
           <img
@@ -91,8 +108,6 @@ export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
               <p>Gênero (s):</p>
               {filme?.genero_filme && filme.genero_filme.length > 0 ? (
                 <div style={{ marginLeft: "1px" }}>
-                  {" "}
-                  {/* Adiciona um pequeno recuo */}
                   {filme.genero_filme.map((gf) => (
                     <p key={gf.genero.id} style={{ marginBottom: "5px" }}>
                       {safeRender(gf.genero.descricao)}
@@ -112,7 +127,7 @@ export function Card({ filme, top = false, showEditIcon = false }: CardProps) {
           <Link to={`/filme/${filme?.id}/avaliar`} title="Avaliar filme">
             <i className="bi bi-star-fill"></i>
           </Link>
-          <span>{safeRender(filme?.nota)}</span>
+          <span>{loading ? "..." : mediaAvaliacoes.toFixed(1)}</span>
         </div>
         <div>
           {/* Link para comentários */}

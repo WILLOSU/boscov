@@ -1,7 +1,7 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 interface CardBodyProps {
-  $top?: boolean
+  $top?: boolean;
 }
 
 export const CardContainer = styled.section`
@@ -20,12 +20,12 @@ export const CardContainer = styled.section`
   &:hover {
     transform: translateY(-5px);
   }
-`
+`;
 
 export const CardBody = styled.article<CardBodyProps>`
   display: flex;
   align-items: flex-start;
-  justify-content: space-between; /* mantive apenas esse */
+  justify-content: space-between; /* Mantive apenas esse */
   padding: 16px;
   padding-top: 40px;
   padding-right: 40px;
@@ -36,7 +36,7 @@ export const CardBody = styled.article<CardBodyProps>`
 
   h2 {
     margin-bottom: 1rem;
-    font-size: ${(props) => (props.$top ? "3rem" : "1.5rem")}; // usei template strings
+    font-size: ${(props) => (props.$top ? "3rem" : "1.5rem")}; // Usei template strings
   }
 
   img {
@@ -54,7 +54,7 @@ export const CardBody = styled.article<CardBodyProps>`
   img:hover {
     transform: scale(1.05);
   }
-`
+`;
 
 export const CardFooter = styled.article`
   display: flex;
@@ -87,14 +87,14 @@ export const CardFooter = styled.article`
       transform: rotate(-10deg) scale(1.2);
     }
   }
-  
+
   /* Adicione este estilo para garantir que o Link não afete o layout */
   a {
     display: flex;
     align-items: center;
     text-decoration: none;
   }
-`
+`;
 
 export const CardRight = styled.div`
   display: flex;
@@ -106,42 +106,62 @@ export const CardRight = styled.div`
     font-size: 14px;
     text-align: left;
   }
-`
+`;
 
 export const EditIcon = styled.i`
   font-size: 1.5rem;
   color: #005954;
   cursor: pointer;
-`
+`;
 
 export const CommentSection = styled.div`
   margin-top: 1rem;
   padding: 1rem;
   border-top: 1px solid #eee;
-`
+`;
 
 export const CommentList = styled.ul`
   list-style: none;
   padding: 0;
-`
+`;
 
 export const CommentItem = styled.li`
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: #555;
-`
+  color: #757575;
+`;
 
 export const AddCommentForm = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   margin-top: 1rem;
-`
+`;
 
 export const CommentInput = styled.textarea`
   padding: 0.5rem;
-  border: 1px solid #ccc;
+  border: 1px solid #757575;
   border-radius: 0.2rem;
   font-size: 0.9rem;
   min-height: 50px;
-`
+`;
+
+
+export const AvaliacaoContainer = styled.div`
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  margin: 56px 0; 
+  gap: 8px; 
+`;
+
+export const NotaMedia = styled.span`
+  font-weight: bold;
+  font-size: 2.5rem; 
+  color: #005954; 
+`;
+
+export const TotalAvaliacoes = styled.span`
+  font-size: 0.9rem;
+  color: #757575;
+`;
